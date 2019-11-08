@@ -11,6 +11,7 @@ public class User {
     }
 
     public User(String uid, String nickName, String urlPhoto) {
+
         this.uid = uid;
         this.nickName = nickName;
         this.urlPhoto = urlPhoto;
@@ -28,7 +29,7 @@ public class User {
         return nickName;
     }
 
-    public void setNickName(String displayName) {
+    public void setNickName(String nickName) {
         this.nickName = nickName;
     }
 
