@@ -11,4 +11,6 @@
     <string name="photo">upload a photo:</string>
     <string name="register">Register</string>
     <string name="nickName">NickName</string>
+    <string name="email">Email</string>
+    <string name="signUpPassword">Password (at least 6 characters)</string>
 </resources>

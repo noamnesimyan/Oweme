@@ -6,10 +6,6 @@ public class User {
     String nickName;
     String urlPhoto;
 
-    public User() {
-        this (null, null,null);
-    }
-
     public User(String uid, String nickName, String urlPhoto) {
 
         this.uid = uid;

@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -131,7 +133,6 @@ public class SignUp extends AppCompatActivity {
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri uri = data.getData();
-
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                 // Log.d(TAG, String.valueOf(bitmap));
@@ -143,9 +144,6 @@ public class SignUp extends AppCompatActivity {
             }
         }
     }
-
-
-
 
     private void pickImage() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -163,6 +161,7 @@ public class SignUp extends AppCompatActivity {
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             uploadImageIntoFB(user);
+                            addNewUser(user);
                             Toast.makeText(SignUp.this, "registration committed", Toast.LENGTH_SHORT).show();
                         } else {
                             // If sign in fails, display a message to the user.
@@ -175,16 +174,42 @@ public class SignUp extends AppCompatActivity {
                 });
     }
 
+    public static Bitmap drawableToBitmap (Drawable drawable) {
+
+        Bitmap bitmap = null;
+        if (drawable instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+            if(bitmapDrawable.getBitmap() != null) {
+                return bitmapDrawable.getBitmap();
+            }
+        }
+
+        if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+        } else {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        }
+
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
+    }
+
     private void uploadImageIntoFB(final FirebaseUser user){
+
+        showProgress();
 
        /* imgPhoto.setDrawingCacheEnabled(true);
         imgPhoto.buildDrawingCache();
         Bitmap bitmap = Bitmap.createBitmap(imgPhoto.getDrawingCache());*/
+
         if(!pickedImage)
         {
-            imgPhoto.setImageDrawable(Drawable.createFromPath("@mipmap/ic_launcher"));
+            Bitmap bitmap = drawableToBitmap(Drawable.createFromPath("@mipmap/ic_launcher"));
+            imgPhoto.setImageBitmap(bitmap);
+            imgPhoto.setTag(bitmap);
         }
-        else {
             Bitmap bitmap = (Bitmap) imgPhoto.getTag();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
@@ -228,7 +253,6 @@ public class SignUp extends AppCompatActivity {
                 }
             });
         }
-    }
     public void showProgress() { mProgress.setVisibility(View.VISIBLE); }
 
     public void hideProgress() { mProgress.setVisibility(View.INVISIBLE);}
@@ -237,7 +261,7 @@ public class SignUp extends AppCompatActivity {
     private void addNewUser(final FirebaseUser user){
 
         User newUser = new User(user.getUid(),user.getDisplayName(),user.getPhotoUrl().toString());
-        database.getReference().child("players").child(user.getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+        database.getReference().child("users").child(user.getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful())
