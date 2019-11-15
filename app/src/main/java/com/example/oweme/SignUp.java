@@ -54,6 +54,7 @@ public class SignUp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        mProgress = findViewById(R.id.progressBar);
         mAuth = FirebaseAuth.getInstance();
         mEmailField = findViewById(R.id.userName);
         mNickNameField = findViewById(R.id.nickName);
@@ -160,9 +161,10 @@ public class SignUp extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            uploadImageIntoFB(user);
-                            addNewUser(user);
                             Toast.makeText(SignUp.this, "registration committed", Toast.LENGTH_SHORT).show();
+                            uploadImageIntoFB(user);
+                           // addNewUser(user);
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -204,6 +206,7 @@ public class SignUp extends AppCompatActivity {
         imgPhoto.buildDrawingCache();
         Bitmap bitmap = Bitmap.createBitmap(imgPhoto.getDrawingCache());*/
 
+
         if(!pickedImage)
         {
             Bitmap bitmap = drawableToBitmap(Drawable.createFromPath("@mipmap/ic_launcher"));
@@ -242,7 +245,7 @@ public class SignUp extends AppCompatActivity {
                         user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                hideProgress();
+                                addNewUser(user);
                             }
                         });
 
@@ -253,28 +256,35 @@ public class SignUp extends AppCompatActivity {
                 }
             });
         }
-    public void showProgress() { mProgress.setVisibility(View.VISIBLE); }
+    public void showProgress() {
+        mProgress.setVisibility(View.VISIBLE);
+    }
 
-    public void hideProgress() { mProgress.setVisibility(View.INVISIBLE);}
+    public void hideProgress() {
+        mProgress.setVisibility(View.INVISIBLE);
+    }
 
 
     private void addNewUser(final FirebaseUser user){
 
         User newUser = new User(user.getUid(),user.getDisplayName(),user.getPhotoUrl().toString());
-        database.getReference().child("users").child(user.getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful())
-                {
-                     moveToMainActivity(user);
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
-        });
+        database.getReference().child("users").child(user.getUid()).setValue(newUser)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful())
+                            {
+                                 moveToMainActivity(user);
+                                 hideProgress();
+                            }
+                        }
+                    })
+                .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            hideProgress();
+                        }
+                    });
     }
     private void moveToMainActivity(FirebaseUser currentUser){
         Intent i = new Intent(this, MainActivity.class);

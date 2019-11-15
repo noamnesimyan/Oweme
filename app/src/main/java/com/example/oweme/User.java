@@ -6,6 +6,11 @@ public class User {
     String nickName;
     String urlPhoto;
 
+    public User() {
+    }
+
+
+
     public User(String uid, String nickName, String urlPhoto) {
 
         this.uid = uid;
