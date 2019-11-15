@@ -128,6 +128,12 @@ public class SignUp extends AppCompatActivity {
         }
     }
 
+    private void pickImage() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -146,12 +152,6 @@ public class SignUp extends AppCompatActivity {
         }
     }
 
-    private void pickImage() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
-    }
-
     private void createAccount(String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -161,14 +161,14 @@ public class SignUp extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(SignUp.this, "registration committed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUp.this, "registration committed", Toast.LENGTH_LONG).show();
                             uploadImageIntoFB(user);
                            // addNewUser(user);
 
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(SignUp.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUp.this, "Authentication failed.", Toast.LENGTH_LONG).show();
                         }
 
                         // ...

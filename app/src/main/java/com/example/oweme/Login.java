@@ -27,6 +27,7 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        mProgress = findViewById(R.id.progressBar3);
         mAuth = FirebaseAuth.getInstance();
         mEmailField = findViewById(R.id.userName);
         mPasswordField = findViewById(R.id.password);
@@ -48,36 +49,38 @@ public class Login extends AppCompatActivity {
 
     private void signIn(String email, String password) {
 
-       // showProgress();
-
+        showProgress();
         // [START sign_in_with_email]
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-
+                            // Sign in success
+                            Toast.makeText(Login.this, "Authentication completed.", Toast.LENGTH_LONG).show();
                             FirebaseUser user = mAuth.getCurrentUser();
                             moveToMainActivity(user);
-                            Toast.makeText(Login.this, "Authentication completed.", Toast.LENGTH_SHORT).show();
 
                         } else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(Login.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Login.this, "Authentication failed.", Toast.LENGTH_LONG).show();
 
                         }
 
-                      //  hideProgress();
+                        hideProgress();
                         // [END_EXCLUDE]
                     }
                 });
         // [END sign_in_with_email]
     }
 
-   // public void showProgress() { mProgress.setVisibility(View.VISIBLE); }
+    public void showProgress() {
+        mProgress.setVisibility(View.VISIBLE);
+    }
 
-   // public void hideProgress() { mProgress.setVisibility(View.INVISIBLE);}
+    public void hideProgress() {
+        mProgress.setVisibility(View.INVISIBLE);
+    }
 
     private void moveToMainActivity(FirebaseUser currentUser){
         Intent i = new Intent(this, MainActivity.class);

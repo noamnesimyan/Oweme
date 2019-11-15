@@ -10,7 +10,42 @@
         android:id="@+id/tvIntro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="50dp"
-        android:text="hey you" />
+        android:textSize="30dp"
+        android:textStyle="italic"
+        android:textAlignment="center"
+        android:text="@string/intro" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tvIntro"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/createEventBTN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="150dp"
+            android:layout_marginHorizontal="75dp"
+            android:text="@string/newEvent"
+            android:onClick="onClick"/>
+
+        <Button
+            android:id="@+id/historyBTN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="75dp"
+            android:layout_marginVertical="10dp"
+            android:text="@string/history"
+            android:onClick="onClick"/>
+
+        <Button
+            android:id="@+id/myAccountBTN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="75dp"
+            android:text="@string/account"
+            android:onClick="onClick"/>
+    </LinearLayout>
 
 </RelativeLayout>
