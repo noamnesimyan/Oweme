@@ -14,7 +14,11 @@
     <string name="email">Email</string>
     <string name="signUpPassword">Password (at least 6 characters)</string>
     <string name="intro">What do you want to do with your account?</string>
-    <string name="newEvent">Create a new event</string>
+    <string name="createNewEvent">Create a new event</string>
     <string name="history">Open my Events-History</string>
     <string name="account">Show my account status</string>
+    <string name="newEvent">New Event</string>
+    <string name="eventNameTV">Enter event name:</string>
+    <string name="enterHere">Enter Here</string>
+    <string name="addMembers">Who do you want to add to your event?</string>
 </resources>

@@ -25,10 +25,10 @@
             android:id="@+id/createEventBTN"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="150dp"
             android:layout_marginHorizontal="75dp"
-            android:text="@string/newEvent"
-            android:onClick="onClick"/>
+            android:layout_marginTop="150dp"
+            android:onClick="onClick"
+            android:text="@string/createNewEvent" />
 
         <Button
             android:id="@+id/historyBTN"
