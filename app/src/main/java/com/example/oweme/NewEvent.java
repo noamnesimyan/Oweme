@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
 
 public class NewEvent extends AppCompatActivity {
 
@@ -27,7 +28,17 @@ public class NewEvent extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new MyAdapter(myDataSet);
+        mAdapter = new MyAdapter(myDataset);
         recyclerView.setAdapter(mAdapter);
+    }
+
+    public void onClick(View view) {
+        int id = view.getId();
+        switch (id) {
+            case R.id.addBTN:
+                findViewById(R.id.my_recycler_view).setVisibility(View.VISIBLE);
+                break;
+
+        }
     }
 }
