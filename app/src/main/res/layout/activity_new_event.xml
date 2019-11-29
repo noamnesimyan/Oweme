@@ -16,6 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="35dp"
+            android:textStyle="italic"
+            android:textAlignment="center"
             android:text="@string/newEvent" />
 
         <View
@@ -68,19 +70,28 @@
             android:onClick="onClick"/>
 
         <LinearLayout
-            android:layout_width="250dp"
+            android:layout_width="match_parent"
             android:layout_height="250dp"
+            android:layout_marginHorizontal="10dp"
             android:layout_marginTop="25dp"
-            android:layout_gravity="center"
             android:orientation="horizontal">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/my_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbars="vertical"
-                android:visibility="visible" />
+                android:scrollbars="horizontal"
+                android:visibility="invisible" />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/createNewEvent"
+            android:layout_marginTop="20dp"
+            android:layout_marginHorizontal="125dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:text="@string/createAccount" />
 
     </LinearLayout>
 </RelativeLayout>

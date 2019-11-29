@@ -55,7 +55,7 @@
             android:layout_marginHorizontal="15dp"
             android:ems="10"
             android:hint="@string/signUpPassword"
-            android:inputType="numberDecimal" />
+            android:inputType="textPassword" />
 
 
         <LinearLayout
