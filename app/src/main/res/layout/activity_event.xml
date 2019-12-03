@@ -6,10 +6,37 @@
     android:layout_height="match_parent"
     tools:context=".Event">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="250dp"
-        android:text="Lay" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/eventName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="30dp"
+            android:textColor="#000000"
+            android:textAlignment="center"
+            android:textStyle="bold|italic"
+            android:text="EventName" />
+
+        <EditText
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:text="Event Date"/>
+
+        <Button
+            android:id="@+id/newExpense"
+            android:layout_marginTop="25dp"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:textStyle="italic"
+            android:onClick="onClick"
+            android:text="@string/newExpense" />
+
+    </LinearLayout>
 </RelativeLayout>

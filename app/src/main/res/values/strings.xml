@@ -22,4 +22,6 @@
     <string name="enterHere">Enter Here</string>
     <string name="addMembers">Who do you want to add to your event?</string>
     <string name="add">Add Members</string>
+    <string name="takingTime">It may take a while...Connecting your user to the Cloud </string>
+    <string name="newExpense">New Expense</string>
 </resources>

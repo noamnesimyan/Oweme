@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -29,6 +30,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     private ArrayList<User> users;
     private ArrayList<String> uIDs;
+    private String currentUserUUID;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -72,7 +74,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public MyAdapter() {
         this.users = new ArrayList<User>();
         this.uIDs = new ArrayList<String>();
+        this.currentUserUUID= FirebaseAuth.getInstance().getCurrentUser().getUid();
         getAllUsersFromFB();
+
     }
 
     private void getAllUsersFromFB(){
@@ -81,7 +85,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot userSnapshot: dataSnapshot.getChildren()) {
-                    users.add(userSnapshot.getValue(User.class));
+                    User user = userSnapshot.getValue(User.class);
+                    if (!user.getUid().equals(currentUserUUID))
+                    {
+                        users.add(user);
+                    }
                 }
                 notifyDataSetChanged();
             }
@@ -109,6 +117,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public int getItemCount() {
+
         return users.size();
     }
 }

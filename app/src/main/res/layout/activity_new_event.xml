@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="35dp"
-            android:textStyle="italic"
+            android:textStyle="italic|bold"
             android:textAlignment="center"
             android:text="@string/newEvent" />
 
@@ -24,7 +24,7 @@
             android:id="@+id/view"
             android:layout_width="match_parent"
             android:layout_height="5dp"
-            android:background="@color/colorPrimary"/>
+            android:background="@color/colorPrimaryDark"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -90,6 +90,7 @@
             android:layout_marginHorizontal="125dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="false"
             android:onClick="onClick"
             android:text="@string/createAccount" />
 

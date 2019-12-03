@@ -6,21 +6,28 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
 
 public class NewEvent extends AppCompatActivity {
 
+    private TextView eventName;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
+
+    private boolean flag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
+        eventName = (TextView)findViewById(R.id.eventName);
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
 
         // use this setting to improve performance if you know that changes
@@ -30,6 +37,27 @@ public class NewEvent extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new MyAdapter(); // specify an adapter
         recyclerView.setAdapter(mAdapter);
+
+         /*eventName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                flag = !eventName.getText().toString().equals("");
+                if(flag)
+                {
+                    (findViewById(R.id.createNewEvent)).setEnabled(true);
+                }
+            }
+        }); */
     }
 
     public void onClick(View view) {
@@ -39,14 +67,15 @@ public class NewEvent extends AppCompatActivity {
                 (findViewById(R.id.my_recycler_view)).setVisibility(View.VISIBLE);
                 break;
             case R.id.createNewEvent:
-                moveToNewEvent();
+                moveToNewEvent(eventName);
                 break;
 
         }
     }
 
-    private void moveToNewEvent(FirebaseUser currentUser){
-        Intent i = new Intent(this, MainActivity.class);
+    private void moveToNewEvent(TextView tv){
+        Intent i = new Intent(this, Event.class);
+        i.putExtra("EventName", tv.getText().toString());
         startActivity(i);
     }
 }
