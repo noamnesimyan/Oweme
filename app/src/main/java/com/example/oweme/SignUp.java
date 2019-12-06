@@ -265,7 +265,7 @@ public class SignUp extends AppCompatActivity {
     }
 
 
-    private void addNewUser(final FirebaseUser user){
+    private void addNewUser(final FirebaseUser user) {
 
         User newUser = new User(user.getUid(),user.getDisplayName(),user.getPhotoUrl().toString());
         database.getReference().child("users").child(user.getUid()).setValue(newUser)

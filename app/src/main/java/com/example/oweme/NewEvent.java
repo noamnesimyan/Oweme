@@ -4,15 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.firebase.auth.FirebaseUser;
 
 public class NewEvent extends AppCompatActivity {
 
@@ -20,8 +14,6 @@ public class NewEvent extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
-
-    private boolean flag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +27,7 @@ public class NewEvent extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);  // use a linear layout manager
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new MyAdapter(); // specify an adapter
+        mAdapter = new AddUsersAdapter(this); // specify an adapter
         recyclerView.setAdapter(mAdapter);
 
          /*eventName.addTextChangedListener(new TextWatcher() {
@@ -67,15 +59,11 @@ public class NewEvent extends AppCompatActivity {
                 (findViewById(R.id.my_recycler_view)).setVisibility(View.VISIBLE);
                 break;
             case R.id.createNewEvent:
-                moveToNewEvent(eventName);
+                ((AddUsersAdapter)mAdapter).moveToNewEvent(eventName);
                 break;
 
         }
     }
 
-    private void moveToNewEvent(TextView tv){
-        Intent i = new Intent(this, Event.class);
-        i.putExtra("EventName", tv.getText().toString());
-        startActivity(i);
-    }
+
 }

@@ -1,8 +1,8 @@
 package com.example.oweme;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +10,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,23 +22,24 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.net.URI;
 import java.util.ArrayList;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+public class AddUsersAdapter extends RecyclerView.Adapter<AddUsersAdapter.MyViewHolder> {
 
     private ArrayList<User> users;
     private ArrayList<String> uIDs;
     private String currentUserUUID;
+    private Context mContext;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textView;
         private ImageView imageView;
         private CheckBox checkBox;
-        private MyAdapter myAdapter;
+        private AddUsersAdapter myAdapter;
 
-        public MyViewHolder(final View item, MyAdapter myAdapter) {
+        public MyViewHolder(final View item, AddUsersAdapter myAdapter) {
+
             super(item);
             textView = item.findViewById(R.id.nickName);
             imageView = item.findViewById(R.id.photo);
@@ -53,7 +53,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
        //   this.imageView.setImageURI(Uri.parse((user.getUrlPhoto())));
             Glide.with(this.imageView.getContext())
                     .load(user.getUrlPhoto())
-                    .into( this.imageView);
+                    .into(this.imageView);
 
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -71,17 +71,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         }
     }
 
-    public MyAdapter() {
+    public AddUsersAdapter(Context context) {
+
         this.users = new ArrayList<User>();
         this.uIDs = new ArrayList<String>();
-        this.currentUserUUID= FirebaseAuth.getInstance().getCurrentUser().getUid();
+        this.currentUserUUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        this.mContext = context;
         getAllUsersFromFB();
-
     }
 
     private void getAllUsersFromFB(){
+
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-        mDatabase.getReference().child("users") .addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.getReference().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot userSnapshot: dataSnapshot.getChildren()) {
@@ -101,12 +103,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         });
 
     }
+
     @NonNull
     @Override
-    public MyAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AddUsersAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // create a new view
         View newView = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
-        MyViewHolder vh = new MyViewHolder(newView, this);
+        AddUsersAdapter.MyViewHolder vh = new MyViewHolder(newView, this);
         return vh;
     }
 
@@ -120,4 +123,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         return users.size();
     }
+
+    public void moveToNewEvent(TextView tv){
+
+        Intent i = new Intent(this.mContext, Event.class);
+        i.putExtra("EventName", tv.getText().toString());
+        i.putStringArrayListExtra("SelectedUsers",this.uIDs);
+        this.mContext.startActivity(i);
+    }
+
 }

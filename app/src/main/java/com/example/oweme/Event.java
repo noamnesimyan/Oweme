@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -18,6 +19,7 @@ public class Event extends AppCompatActivity {
 
     private TextView eventName;
     private EditText eventDate;
+    private ArrayList<String> selectedUsersUIDS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +50,10 @@ public class Event extends AppCompatActivity {
     
     private void moveToExpenseDetails()
     {
-        Intent i = new Intent(this, Event.class);
-        startActivityForResult(i);
+        Intent i = new Intent(this, ExpenseDetails.class);
+        selectedUsersUIDS = getIntent().getStringArrayListExtra("SelectedUsers");
+        i.putStringArrayListExtra("SelectedUsers",selectedUsersUIDS);
+        startActivity(i);
     }
 
     private void startActivityForResult(Intent i) {
