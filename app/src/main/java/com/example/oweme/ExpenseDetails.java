@@ -4,9 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
+import android.widget.ImageButton;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ExpenseDetails extends AppCompatActivity {
@@ -15,6 +21,8 @@ public class ExpenseDetails extends AppCompatActivity {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<String> selectedUsersUIDS;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private ImageButton imageBTN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,16 +35,35 @@ public class ExpenseDetails extends AppCompatActivity {
         selectedUsersUIDS = getIntent().getStringArrayListExtra("SelectedUsers");
         mAdapter = new ExpenseAdapter(selectedUsersUIDS); // specify an adapter
         recyclerView.setAdapter(mAdapter);
+        imageBTN = findViewById(R.id.imageButton);
     }
 
     public void onClick(View view) {
         int id = view.getId();
         switch (id) {
             case R.id.imageButton:
-                //open camera here
+                takeAPhoto();
                 break;
         }
     }
+
+    private void takeAPhoto()
+    {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null)
+        {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            imageBTN.setImageBitmap(imageBitmap);
+        }
+    }
+
 
 
 }

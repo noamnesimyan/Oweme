@@ -48,9 +48,9 @@
                 android:id="@+id/imageButton"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:layout_weight="1"
                 android:onClick="onClick"
-                app:srcCompat="@drawable/common_google_signin_btn_text_light_normal_background" />
+                app:srcCompat="@drawable/common_full_open_on_phone" />
+
         </LinearLayout>
 
         <TextView
