@@ -124,6 +124,7 @@ public class SignUp extends AppCompatActivity {
                 pickedImage = true;
                 break;
             case R.id.createUser:
+                findViewById(R.id.someText).setVisibility(View.VISIBLE);
                 createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString());
         }
     }
@@ -220,7 +221,7 @@ public class SignUp extends AppCompatActivity {
 
             FirebaseStorage storage = FirebaseStorage.getInstance();
 
-            final StorageReference storageRef = storage.getReference().child("photos").child(user.getUid() + ".jpeg");
+            final StorageReference storageRef = storage.getReference().child("Photos").child(user.getUid() + ".jpeg");
 
             UploadTask uploadTask = storageRef.putBytes(data);
             Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
@@ -268,7 +269,7 @@ public class SignUp extends AppCompatActivity {
     private void addNewUser(final FirebaseUser user) {
 
         User newUser = new User(user.getUid(),user.getDisplayName(),user.getPhotoUrl().toString());
-        database.getReference().child("users").child(user.getUid()).setValue(newUser)
+        database.getReference().child("Users").child(user.getUid()).setValue(newUser)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {

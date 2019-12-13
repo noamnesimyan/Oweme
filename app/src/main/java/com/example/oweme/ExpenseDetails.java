@@ -10,7 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class ExpenseDetails extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<String> selectedUsersUIDS;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private ImageButton imageBTN;
+    private ImageView photo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +35,13 @@ public class ExpenseDetails extends AppCompatActivity {
         selectedUsersUIDS = getIntent().getStringArrayListExtra("SelectedUsers");
         mAdapter = new ExpenseAdapter(selectedUsersUIDS); // specify an adapter
         recyclerView.setAdapter(mAdapter);
-        imageBTN = findViewById(R.id.imageButton);
+        photo = findViewById(R.id.photo);
     }
 
     public void onClick(View view) {
         int id = view.getId();
         switch (id) {
-            case R.id.imageButton:
+            case R.id.takePhoto:
                 takeAPhoto();
                 break;
         }
@@ -60,7 +60,7 @@ public class ExpenseDetails extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-            imageBTN.setImageBitmap(imageBitmap);
+            photo.setImageBitmap(imageBitmap);
         }
     }
 

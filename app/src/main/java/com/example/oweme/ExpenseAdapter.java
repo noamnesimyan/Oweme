@@ -60,11 +60,11 @@ public class ExpenseAdapter extends RecyclerView.Adapter {
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     if(isChecked) {
                         ((LinearLayout) checkBox.getParent()).setBackgroundColor(Color.LTGRAY);
-                        myAdapter.uIDs.add(user.getUid());
+                        myAdapter.uIDs.add(user.getUserID());
                     }
                     else {
                         ((LinearLayout) checkBox.getParent()).setBackgroundColor(Color.WHITE);
-                        myAdapter.uIDs.remove(user.getUid());
+                        myAdapter.uIDs.remove(user.getUserID());
                     }
                 }
             });
@@ -90,7 +90,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter {
         for(int i = 0; i < this.uIDs.size(); i++)
         {
             FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-            mDatabase.getReference().child("users").child(uIDs.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.getReference().child("Users").child(uIDs.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     User user = dataSnapshot.getValue(User.class);

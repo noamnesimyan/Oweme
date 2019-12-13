@@ -2,26 +2,26 @@ package com.example.oweme;
 
 public class User {
 
-    String uid;
+    String userID;
     String nickName;
     String urlPhoto;
 
     public User() {
     }
 
-    public User(String uid, String nickName, String urlPhoto) {
+    public User(String userID, String nickName, String urlPhoto) {
 
-        this.uid = uid;
+        this.userID = userID;
         this.nickName = nickName;
         this.urlPhoto = urlPhoto;
     }
 
-    public String getUid() {
-        return uid;
+    public String getUserID() {
+        return userID;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
     public String getNickName() {

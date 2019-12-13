@@ -30,6 +30,7 @@ public class AddUsersAdapter extends RecyclerView.Adapter<AddUsersAdapter.MyView
     private ArrayList<String> uIDs;
     private String currentUserUUID;
     private Context mContext;
+    private String members;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -37,6 +38,7 @@ public class AddUsersAdapter extends RecyclerView.Adapter<AddUsersAdapter.MyView
         private ImageView imageView;
         private CheckBox checkBox;
         private AddUsersAdapter myAdapter;
+        private static String members;
 
         public MyViewHolder(final View item, AddUsersAdapter myAdapter) {
 
@@ -45,12 +47,12 @@ public class AddUsersAdapter extends RecyclerView.Adapter<AddUsersAdapter.MyView
             imageView = item.findViewById(R.id.photo);
             checkBox = item.findViewById(R.id.select);
             this.myAdapter = myAdapter;
-
+            members = "";
         }
 
         public void bindData(final User user) {
             this.textView.setText(user.getNickName());
-       //   this.imageView.setImageURI(Uri.parse((user.getUrlPhoto())));
+            //   this.imageView.setImageURI(Uri.parse((user.getUrlPhoto())));
             Glide.with(this.imageView.getContext())
                     .load(user.getUrlPhoto())
                     .into(this.imageView);
@@ -58,16 +60,21 @@ public class AddUsersAdapter extends RecyclerView.Adapter<AddUsersAdapter.MyView
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                    if(isChecked) {
+                    if (isChecked) {
                         ((LinearLayout) checkBox.getParent()).setBackgroundColor(Color.LTGRAY);
-                        myAdapter.uIDs.add(user.getUid());
-                    }
-                    else {
+                        myAdapter.uIDs.add(user.getUserID());
+                        members += ", " + user.getUserID();
+                    } else {
                         ((LinearLayout) checkBox.getParent()).setBackgroundColor(Color.WHITE);
-                        myAdapter.uIDs.remove(user.getUid());
+                        myAdapter.uIDs.remove(user.getUserID());
+                        members.replace(", " + user.getUserID(), "");
                     }
                 }
             });
+        }
+
+        public static String getMembers() {
+            return members;
         }
     }
 
@@ -80,20 +87,21 @@ public class AddUsersAdapter extends RecyclerView.Adapter<AddUsersAdapter.MyView
         getAllUsersFromFB();
     }
 
-    private void getAllUsersFromFB(){
+    private void getAllUsersFromFB() {
 
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-        mDatabase.getReference().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.getReference().child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot userSnapshot: dataSnapshot.getChildren()) {
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     User user = userSnapshot.getValue(User.class);
-                    if (!user.getUid().equals(currentUserUUID))
-                    {
+
+                    if (!user.getUserID().equals(currentUserUUID)) {
                         users.add(user);
                     }
                 }
-                notifyDataSetChanged();
+                notifyDataSetChanged(); //updates the list
             }
 
             @Override
@@ -124,12 +132,19 @@ public class AddUsersAdapter extends RecyclerView.Adapter<AddUsersAdapter.MyView
         return users.size();
     }
 
-    public void moveToNewEvent(TextView tv){
+    public void moveToNewEvent(TextView tv) {
 
-        Intent i = new Intent(this.mContext, Event.class);
+        Intent i = new Intent(this.mContext, EventMenu.class);
         i.putExtra("EventName", tv.getText().toString());
-        i.putStringArrayListExtra("SelectedUsers",this.uIDs);
+        i.putStringArrayListExtra("SelectedUsers", this.uIDs);
         this.mContext.startActivity(i);
     }
+
+    public String getMembers() {
+        members = currentUserUUID + MyViewHolder.getMembers();
+        return members;
+    }
+
+
 
 }

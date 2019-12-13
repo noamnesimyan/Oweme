@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ExpenseDetails"></activity>
-        <activity android:name=".Event" />
+        <activity android:name=".EventMenu" />
         <activity android:name=".NewEvent" />
         <activity android:name=".SignUp" />
         <activity android:name=".Login">

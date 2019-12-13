@@ -36,20 +36,31 @@
                 android:id="@+id/bill"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="10dp"
                 android:ems="10"
                 android:inputType="numberDecimal"
                 android:hint="Bill: " />
 
+                <Button
+                    android:id="@+id/takePhoto"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="onClick"
+                    android:text="@string/takePhoto" />
+
             </LinearLayout>
 
-
-            <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:onClick="onClick"
-                app:srcCompat="@drawable/common_full_open_on_phone" />
+            <ImageView
+                android:id="@+id/photo"
+                android:layout_width="175dp"
+                android:layout_height="175dp"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:scaleType="centerCrop"
+                android:padding="10dp"
+                android:src="@mipmap/ic_launcher_round"/>
 
         </LinearLayout>
 
