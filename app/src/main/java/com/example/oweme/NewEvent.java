@@ -58,11 +58,11 @@ public class NewEvent extends AppCompatActivity {
     private void addEventToFireBase(final FirebaseDatabase database)
     {
         final String members = ((AddUsersAdapter)mAdapter).getMembers();
-        database.getReference().child("Events");
-        Event newEvent = new Event(database.getReference().child("Events").toString(),this.eventName.getText().toString(),"active", members);
-        database.getReference().child("Events").child(database.getReference().child("Events").toString()).setValue(newEvent );
+        String key = database.getReference().child("Events").push().getKey();
+        final Event newEvent = new Event(key, this.eventName.getText().toString(),"active", members);
+        database.getReference().child("Events").child(key).setValue(newEvent);
 
-     /*   database.getReference().child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+        database.getReference().child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
@@ -70,21 +70,22 @@ public class NewEvent extends AppCompatActivity {
 
                     if (members.contains(user.getUserID()))
                     {
-                        database.getReference().child("Users").child(user.getUserID()).child("Events").setValue("laylaylay");
+                        user.setEvents(user.getEvents() + newEvent.getEid());
+                        database.getReference().child("Users").child(user.getUserID()).child("events").
+                                setValue(user.getEvents().isEmpty()? newEvent.getEid() : user.getEvents()+", " + newEvent.getEid());
                     }
                 }
-               // mAdapter.notifyDataSetChanged(); //updates the list
+                mAdapter.notifyDataSetChanged(); //updates the list
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        }); */
+        });
 
         Toast.makeText(this,"LAY!",Toast.LENGTH_LONG).show();
     }
-// לא עובד. לתקן את החרא הזה
 
 
 

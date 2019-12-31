@@ -5,6 +5,7 @@ public class User {
     String userID;
     String nickName;
     String urlPhoto;
+    String events;
 
     public User() {
     }
@@ -14,6 +15,7 @@ public class User {
         this.userID = userID;
         this.nickName = nickName;
         this.urlPhoto = urlPhoto;
+        this.events = "";
     }
 
     public String getUserID() {
@@ -39,4 +41,16 @@ public class User {
     public void setUrlPhoto(String urlPhoto) {
         this.urlPhoto = urlPhoto;
     }
+
+    public String getEvents()
+    {
+        return this.events;
+    }
+
+    public void setEvents(String events)
+    {
+        this.events = events;
+    }
+
+
 }

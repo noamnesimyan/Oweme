@@ -100,6 +100,7 @@ public class AddUsersAdapter extends RecyclerView.Adapter<AddUsersAdapter.MyView
                     if (!user.getUserID().equals(currentUserUUID)) {
                         users.add(user);
                     }
+
                 }
                 notifyDataSetChanged(); //updates the list
             }
