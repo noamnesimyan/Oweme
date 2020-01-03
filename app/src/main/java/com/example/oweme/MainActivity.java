@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(!isMyServiceRunning(FirebaseListener.class))
         {
-            Intent intent = new Intent(this,MainActivity.class);
+            Intent intent = new Intent(this, FirebaseListener.class);
             startService(intent);
         }
 
