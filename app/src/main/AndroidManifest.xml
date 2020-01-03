@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.oweme">
 
-    <uses-feature android:name="android.hardware.camera"
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
 
     <application
@@ -12,7 +13,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ExpenseDetails"></activity>
+        <service
+            android:name=".FirebaseListener"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <activity android:name=".ExpenseDetails" />
         <activity android:name=".EventMenu" />
         <activity android:name=".NewEvent" />
         <activity android:name=".SignUp" />

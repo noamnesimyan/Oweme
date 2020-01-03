@@ -28,7 +28,7 @@ public class AddUsersAdapter extends RecyclerView.Adapter<AddUsersAdapter.MyView
 
     private ArrayList<User> users;
     private ArrayList<String> uIDs;
-    private String currentUserUUID;
+    private String currentUserID;
     private Context mContext;
     private String members;
 
@@ -82,7 +82,7 @@ public class AddUsersAdapter extends RecyclerView.Adapter<AddUsersAdapter.MyView
 
         this.users = new ArrayList<User>();
         this.uIDs = new ArrayList<String>();
-        this.currentUserUUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        this.currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         this.mContext = context;
         getAllUsersFromFB();
     }
@@ -97,7 +97,7 @@ public class AddUsersAdapter extends RecyclerView.Adapter<AddUsersAdapter.MyView
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     User user = userSnapshot.getValue(User.class);
 
-                    if (!user.getUserID().equals(currentUserUUID)) {
+                    if (!user.getUserID().equals(currentUserID)) {
                         users.add(user);
                     }
 
@@ -137,12 +137,13 @@ public class AddUsersAdapter extends RecyclerView.Adapter<AddUsersAdapter.MyView
 
         Intent i = new Intent(this.mContext, EventMenu.class);
         i.putExtra("EventName", tv.getText().toString());
+        this.uIDs.add(currentUserID);
         i.putStringArrayListExtra("SelectedUsers", this.uIDs);
         this.mContext.startActivity(i);
     }
 
     public String getMembers() {
-        members = currentUserUUID + MyViewHolder.getMembers();
+        members = currentUserID + MyViewHolder.getMembers();
         return members;
     }
 

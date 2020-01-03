@@ -26,10 +26,7 @@ import java.util.ArrayList;
 public class ExpenseAdapter extends RecyclerView.Adapter {
 
     private ArrayList<User> users;
-    private ArrayList<String> uIDs;
     private ArrayList<String> checkedUsers;
-
-    private String currentUserUUID;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -60,11 +57,9 @@ public class ExpenseAdapter extends RecyclerView.Adapter {
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     if(isChecked) {
                         ((LinearLayout) checkBox.getParent()).setBackgroundColor(Color.LTGRAY);
-                        myAdapter.uIDs.add(user.getUserID());
                     }
                     else {
                         ((LinearLayout) checkBox.getParent()).setBackgroundColor(Color.WHITE);
-                        myAdapter.uIDs.remove(user.getUserID());
                     }
                 }
             });
@@ -72,30 +67,22 @@ public class ExpenseAdapter extends RecyclerView.Adapter {
     }
 
     public ExpenseAdapter(ArrayList<String> checkedUsers) {
+
         this.users = new ArrayList<User>();
-        this.uIDs = new ArrayList<String>();
         this.checkedUsers = checkedUsers;
         getAllCheckedUsers(this.checkedUsers);
-
-        this.currentUserUUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
     private void getAllCheckedUsers(ArrayList<String> checkedUsers) {
 
-        for(int i = 0; i < checkedUsers.size(); i++)
-        {
-            this.uIDs.add(checkedUsers.get(i));
-        }
+        for(int i = 0; i < checkedUsers.size(); i++) {
 
-        for(int i = 0; i < this.uIDs.size(); i++)
-        {
-            FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-            mDatabase.getReference().child("Users").child(uIDs.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
+            FirebaseDatabase myDatabase = FirebaseDatabase.getInstance();
+            myDatabase.getReference().child("Users").child(checkedUsers.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     User user = dataSnapshot.getValue(User.class);
                     users.add(user);
-
                     notifyDataSetChanged();
                 }
 

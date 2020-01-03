@@ -24,7 +24,7 @@ public class NewEvent extends AppCompatActivity {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private FirebaseAuth mAuth;
+   // private FirebaseAuth mAuth;
 
 
     @Override
@@ -38,7 +38,7 @@ public class NewEvent extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new AddUsersAdapter(this); // specify an adapter
         recyclerView.setAdapter(mAdapter);
-        mAuth = FirebaseAuth.getInstance();
+      //  mAuth = FirebaseAuth.getInstance();
     }
 
     public void onClick(View view) {
@@ -70,7 +70,7 @@ public class NewEvent extends AppCompatActivity {
 
                     if (members.contains(user.getUserID()))
                     {
-                        user.setEvents(user.getEvents() + newEvent.getEid());
+                        // user.setEvents(user.getEvents() + newEvent.getEid());
                         database.getReference().child("Users").child(user.getUserID()).child("events").
                                 setValue(user.getEvents().isEmpty()? newEvent.getEid() : user.getEvents()+", " + newEvent.getEid());
                     }
