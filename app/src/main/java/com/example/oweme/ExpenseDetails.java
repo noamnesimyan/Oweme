@@ -11,9 +11,13 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class ExpenseDetails extends AppCompatActivity {
 
@@ -22,7 +26,9 @@ public class ExpenseDetails extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<String> selectedUsersUIDS;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private String eventID;
     private ImageView photo;
+    private TextView eventDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +42,11 @@ public class ExpenseDetails extends AppCompatActivity {
         mAdapter = new ExpenseAdapter(selectedUsersUIDS); // specify an adapter
         recyclerView.setAdapter(mAdapter);
         photo = findViewById(R.id.photo);
+        eventID = getIntent().getStringExtra("eventID");
+        eventDate = findViewById(R.id.date);
+        String date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+        eventDate.setText("Creation Date: " + date);
+
     }
 
     public void onClick(View view) {

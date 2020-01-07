@@ -16,8 +16,9 @@ import java.util.Locale;
 public class EventMenu extends AppCompatActivity {
 
     private TextView eventName;
-    private EditText eventDate;
+    private TextView eventDate;
     private ArrayList<String> selectedUsersUIDS;
+    private String eventID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +26,7 @@ public class EventMenu extends AppCompatActivity {
         setContentView(R.layout.activity_event_menu);
         eventName = findViewById(R.id.eventName);
         eventDate = findViewById(R.id.date);
+        eventID = getIntent().getStringExtra("eventID");
         setEventNameAndDate();
     }
 
@@ -34,7 +36,7 @@ public class EventMenu extends AppCompatActivity {
         String finalEventName = getIntent().getStringExtra("EventName");
         eventName.setText(finalEventName);
         //modifier the event date
-        String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+        String date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
         eventDate.setText("Creation Date: " + date);
     }
 
@@ -51,6 +53,7 @@ public class EventMenu extends AppCompatActivity {
         Intent i = new Intent(this, ExpenseDetails.class);
         selectedUsersUIDS = getIntent().getStringArrayListExtra("SelectedUsers");
         i.putStringArrayListExtra("SelectedUsers",selectedUsersUIDS);
+        i.putExtra("eventID", this.eventID);
         startActivity(i);
     }
 

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class FirebaseListener extends Service {
 
     static FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private static FirebaseAuth mAuth  = FirebaseAuth.getInstance(); ;
+    private static FirebaseAuth mAuth  = FirebaseAuth.getInstance();
     private String[] myEvents;
 
     public FirebaseListener() {

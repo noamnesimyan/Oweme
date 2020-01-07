@@ -10,8 +10,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -36,7 +36,7 @@ public class NewEvent extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);  // use a linear layout manager
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new AddUsersAdapter(this); // specify an adapter
+        mAdapter = new NewEventAdapter(this); // specify an adapter
         recyclerView.setAdapter(mAdapter);
       //  mAuth = FirebaseAuth.getInstance();
     }
@@ -49,7 +49,7 @@ public class NewEvent extends AppCompatActivity {
                 break;
             case R.id.createNewEvent:
                 addEventToFireBase(database);
-                ((AddUsersAdapter)mAdapter).moveToNewEvent(eventName);
+
                 break;
 
         }
@@ -57,10 +57,16 @@ public class NewEvent extends AppCompatActivity {
 
     private void addEventToFireBase(final FirebaseDatabase database)
     {
-        final String members = ((AddUsersAdapter)mAdapter).getMembers();
+        final String members = ((NewEventAdapter)mAdapter).getMembers();
         String key = database.getReference().child("Events").push().getKey();
         final Event newEvent = new Event(key, this.eventName.getText().toString(),"active", members);
-        database.getReference().child("Events").child(key).setValue(newEvent);
+        // פיירבייס לא מעדכן את הEXPENSES בגלל שהם רקים?
+        database.getReference().child("Events").child(key).setValue(newEvent).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                ((NewEventAdapter)mAdapter).moveToNewEvent(newEvent);
+            }
+        });
 
         database.getReference().child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

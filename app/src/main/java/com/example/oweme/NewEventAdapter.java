@@ -24,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class AddUsersAdapter extends RecyclerView.Adapter<AddUsersAdapter.MyViewHolder> {
+public class NewEventAdapter extends RecyclerView.Adapter<NewEventAdapter.MyViewHolder> {
 
     private ArrayList<User> users;
     private ArrayList<String> uIDs;
@@ -37,10 +37,10 @@ public class AddUsersAdapter extends RecyclerView.Adapter<AddUsersAdapter.MyView
         private TextView textView;
         private ImageView imageView;
         private CheckBox checkBox;
-        private AddUsersAdapter myAdapter;
+        private NewEventAdapter myAdapter;
         private static String members;
 
-        public MyViewHolder(final View item, AddUsersAdapter myAdapter) {
+        public MyViewHolder(final View item, NewEventAdapter myAdapter) {
 
             super(item);
             textView = item.findViewById(R.id.nickName);
@@ -78,7 +78,7 @@ public class AddUsersAdapter extends RecyclerView.Adapter<AddUsersAdapter.MyView
         }
     }
 
-    public AddUsersAdapter(Context context) {
+    public NewEventAdapter(Context context) {
 
         this.users = new ArrayList<User>();
         this.uIDs = new ArrayList<String>();
@@ -115,10 +115,10 @@ public class AddUsersAdapter extends RecyclerView.Adapter<AddUsersAdapter.MyView
 
     @NonNull
     @Override
-    public AddUsersAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public NewEventAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // create a new view
         View newView = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
-        AddUsersAdapter.MyViewHolder vh = new MyViewHolder(newView, this);
+        NewEventAdapter.MyViewHolder vh = new MyViewHolder(newView, this);
         return vh;
     }
 
@@ -133,10 +133,11 @@ public class AddUsersAdapter extends RecyclerView.Adapter<AddUsersAdapter.MyView
         return users.size();
     }
 
-    public void moveToNewEvent(TextView tv) {
+    public void moveToNewEvent(Event event) {
 
         Intent i = new Intent(this.mContext, EventMenu.class);
-        i.putExtra("EventName", tv.getText().toString());
+        i.putExtra("EventName", event.getEventName());
+        i.putExtra("EventID", event.getEid());
         this.uIDs.add(currentUserID);
         i.putStringArrayListExtra("SelectedUsers", this.uIDs);
         this.mContext.startActivity(i);
