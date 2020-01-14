@@ -12,6 +12,9 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -29,6 +32,9 @@ public class ExpenseDetails extends AppCompatActivity {
     private String eventID;
     private ImageView photo;
     private TextView eventDate;
+    private TextView description;
+    private TextView bill;
+    final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +52,23 @@ public class ExpenseDetails extends AppCompatActivity {
         eventDate = findViewById(R.id.date);
         String date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
         eventDate.setText("Creation Date: " + date);
+        description = findViewById(R.id.description);
+        bill = findViewById(R.id.bill);
 
+        findViewById(R.id.createExpenseBTN).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                if(((ExpenseAdapter)mAdapter).getUsersIPaidFor().size() > 0)
+                {
+                    addExpenseToFireBase(database);
+                }
+                else
+                {
+                    Toast.makeText(ExpenseDetails.this, "You have to pay for at least 1 person \n(it can be you either)", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     public void onClick(View view) {
@@ -74,6 +96,19 @@ public class ExpenseDetails extends AppCompatActivity {
             photo.setImageBitmap(imageBitmap);
         }
     }
+
+    private void addExpenseToFireBase(final FirebaseDatabase database)
+    {
+        Expense newExpense = new Expense("id", description.getText().toString(),Double.parseDouble(bill.getText().toString()), //continue from here!!!!!!!!
+        ;
+
+        //לעשות את זה דבר ראשון שאני פותח את הפרוייקט!!!!!!
+
+
+        Intent i = new Intent(this,EventMenu.class);
+        startActivity(i);
+    }
+
 
 
 

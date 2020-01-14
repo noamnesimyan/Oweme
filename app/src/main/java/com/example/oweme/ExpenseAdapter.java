@@ -27,6 +27,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter {
 
     private ArrayList<User> users;
     private ArrayList<String> checkedUsers;
+    private ArrayList<String> usersIPaidFor;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -57,9 +58,11 @@ public class ExpenseAdapter extends RecyclerView.Adapter {
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     if(isChecked) {
                         ((LinearLayout) checkBox.getParent()).setBackgroundColor(Color.LTGRAY);
+                        myAdapter.usersIPaidFor.add(user.getUserID());
                     }
                     else {
                         ((LinearLayout) checkBox.getParent()).setBackgroundColor(Color.WHITE);
+                        myAdapter.usersIPaidFor.remove(user.getUserID());
                     }
                 }
             });
@@ -70,6 +73,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter {
 
         this.users = new ArrayList<User>();
         this.checkedUsers = checkedUsers;
+        this.usersIPaidFor = new ArrayList<String>();
         getAllCheckedUsers(this.checkedUsers);
     }
 
@@ -114,5 +118,10 @@ public class ExpenseAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         return users.size();
+    }
+
+    public ArrayList<String> getUsersIPaidFor()
+    {
+        return this.usersIPaidFor;
     }
 }

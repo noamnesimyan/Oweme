@@ -148,6 +148,12 @@ public class NewEventAdapter extends RecyclerView.Adapter<NewEventAdapter.MyView
         return members;
     }
 
+    public ArrayList<String> getuIDs()
+    {
+        return this.uIDs;
+    }
+
+
 
 
 }

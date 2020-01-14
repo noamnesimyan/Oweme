@@ -1,23 +1,22 @@
 package com.example.oweme;
 
-import java.util.Date;
-
 public class Expense {
 
     String eid;
     String description;
-    Date date;
+    long CreatedDate;
     double amount;
-    String uid;
+    String owner;
     String members;
 
 
-    public Expense(String eid, String description, Date date, double amount, String uid, String members) {
+    public Expense(String eid, String description, double amount, String owner, String members) {
+
         this.eid = eid;
         this.description = description;
-        this.date = date;
+        this.CreatedDate = System.currentTimeMillis();
         this.amount = amount;
-        this.uid = uid;
+        this.owner = owner;
         this.members = members;
     }
 
@@ -37,12 +36,12 @@ public class Expense {
         this.eid = eid;
     }
 
-    public Date getDate() {
-        return date;
+    public long getDate() {
+        return CreatedDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDate(long CreatedDate) {
+        this.CreatedDate = CreatedDate;
     }
 
     public double getAmount() {
@@ -53,12 +52,12 @@ public class Expense {
         this.amount = amount;
     }
 
-    public String getUid() {
-        return uid;
+    public String getOwner() {
+        return owner;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public String getMembers() {

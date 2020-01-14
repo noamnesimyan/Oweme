@@ -1,7 +1,6 @@
 package com.example.oweme;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Event {
 
@@ -9,6 +8,7 @@ public class Event {
     String eventName;
     String status;
     String members;
+    long createdDate;
     ArrayList<Expense> expenses;
 
     public Event() {
@@ -20,10 +20,13 @@ public class Event {
         this.eventName = eventName;
         this.status = status;
         this.members = members;
+        this.createdDate = System.currentTimeMillis();
         expenses = new ArrayList<Expense>();
-        Date date = new Date();
-        expenses.add(new Expense("ff", "pipikaki",date , 20, "hhh", "bar"));
     }
+
+    public long getCreatedDate() { return createdDate; }
+
+    public void setCreatedDate(long createdDate) { this.createdDate = createdDate; }
 
     public void setMembers(String members) { this.members = members; }
 

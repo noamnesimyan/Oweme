@@ -90,7 +90,7 @@
             android:layout_height="275dp" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/createExpenseBTN"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"

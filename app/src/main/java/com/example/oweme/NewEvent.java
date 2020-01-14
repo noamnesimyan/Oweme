@@ -39,6 +39,24 @@ public class NewEvent extends AppCompatActivity {
         mAdapter = new NewEventAdapter(this); // specify an adapter
         recyclerView.setAdapter(mAdapter);
       //  mAuth = FirebaseAuth.getInstance();
+
+        findViewById(R.id.createNewEvent).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(((NewEventAdapter)mAdapter).getuIDs().size() > 0)
+                {
+                    addEventToFireBase(database);
+                }
+                else
+                {
+                    Toast.makeText(NewEvent.this, "You have to add at least 1 person to the event", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+
+
     }
 
     public void onClick(View view) {
@@ -47,11 +65,6 @@ public class NewEvent extends AppCompatActivity {
             case R.id.addBTN:
                 (findViewById(R.id.my_recycler_view)).setVisibility(View.VISIBLE);
                 break;
-            case R.id.createNewEvent:
-                addEventToFireBase(database);
-
-                break;
-
         }
     }
 
@@ -60,7 +73,6 @@ public class NewEvent extends AppCompatActivity {
         final String members = ((NewEventAdapter)mAdapter).getMembers();
         String key = database.getReference().child("Events").push().getKey();
         final Event newEvent = new Event(key, this.eventName.getText().toString(),"active", members);
-        // פיירבייס לא מעדכן את הEXPENSES בגלל שהם רקים?
         database.getReference().child("Events").child(key).setValue(newEvent).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

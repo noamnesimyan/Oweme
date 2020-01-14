@@ -54,10 +54,10 @@ public class EventMenu extends AppCompatActivity {
         selectedUsersUIDS = getIntent().getStringArrayListExtra("SelectedUsers");
         i.putStringArrayListExtra("SelectedUsers",selectedUsersUIDS);
         i.putExtra("eventID", this.eventID);
-        startActivity(i);
+        startActivityForResult(i, 1);
     }
 
-    private void startActivityForResult(Intent i) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     }
 
 
