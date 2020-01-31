@@ -99,7 +99,6 @@ public class ExpenseAdapter extends RecyclerView.Adapter {
     }
 
 
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,8 +18,10 @@ public class EventMenu extends AppCompatActivity {
 
     private TextView eventName;
     private TextView eventDate;
-    private ArrayList<String> selectedUsersUIDS;
+    private ArrayList<String> selectedUsersIDS;
     private String eventID;
+
+    static final int PICK_CONTACT_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +29,7 @@ public class EventMenu extends AppCompatActivity {
         setContentView(R.layout.activity_event_menu);
         eventName = findViewById(R.id.eventName);
         eventDate = findViewById(R.id.date);
-        eventID = getIntent().getStringExtra("eventID");
+        eventID = getIntent().getStringExtra("EventID");
         setEventNameAndDate();
     }
 
@@ -51,13 +54,17 @@ public class EventMenu extends AppCompatActivity {
     private void moveToExpenseDetails()
     {
         Intent i = new Intent(this, ExpenseDetails.class);
-        selectedUsersUIDS = getIntent().getStringArrayListExtra("SelectedUsers");
-        i.putStringArrayListExtra("SelectedUsers",selectedUsersUIDS);
-        i.putExtra("eventID", this.eventID);
-        startActivityForResult(i, 1);
+        selectedUsersIDS = getIntent().getStringArrayListExtra("SelectedUsers");
+        i.putStringArrayListExtra("SelectedUsers",selectedUsersIDS);
+        i.putExtra("EventID", this.eventID);
+        startActivityForResult(i, PICK_CONTACT_REQUEST);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == PICK_CONTACT_REQUEST && resultCode == RESULT_OK) {
+            Toast.makeText(EventMenu.this, "Expense completed", Toast.LENGTH_LONG).show();
+        }
     }
 
 

@@ -50,7 +50,7 @@ public class FirebaseListener extends Service {
 
     private void listenToEventExpenses()
     {
-        // database.getReference().child("Users")
+        //להמשיך מכאן!!! לעשות ליסנר שמאזין לאיבנטים שלי ובכל פעם שמישהו אחר עושה עליי הוצאה חדשה אז קופץ בטלפון שלי טוסט
     }
 
 

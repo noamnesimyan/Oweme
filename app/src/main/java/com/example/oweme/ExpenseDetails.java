@@ -1,5 +1,6 @@
 package com.example.oweme;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,6 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
@@ -27,14 +31,16 @@ public class ExpenseDetails extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    private ArrayList<String> selectedUsersUIDS;
+    private ArrayList<String> selectedUsersIDS;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private String eventID;
-    private ImageView photo;
+    private ImageView picture;
     private TextView eventDate;
     private TextView description;
     private TextView bill;
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private FirebaseAuth mAuth;
+    private MyDataBase myDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +50,12 @@ public class ExpenseDetails extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);  // use a linear layout manager
         recyclerView.setLayoutManager(layoutManager);
-        selectedUsersUIDS = getIntent().getStringArrayListExtra("SelectedUsers");
-        mAdapter = new ExpenseAdapter(selectedUsersUIDS); // specify an adapter
+        selectedUsersIDS = getIntent().getStringArrayListExtra("SelectedUsers");
+        mAdapter = new ExpenseAdapter(selectedUsersIDS); // specify an adapter
+        mAuth = FirebaseAuth.getInstance();
         recyclerView.setAdapter(mAdapter);
-        photo = findViewById(R.id.photo);
-        eventID = getIntent().getStringExtra("eventID");
+        picture = findViewById(R.id.photo);
+        eventID = getIntent().getStringExtra("EventID");
         eventDate = findViewById(R.id.date);
         String date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
         eventDate.setText("Creation Date: " + date);
@@ -56,7 +63,6 @@ public class ExpenseDetails extends AppCompatActivity {
         bill = findViewById(R.id.bill);
 
         findViewById(R.id.createExpenseBTN).setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
                 if(((ExpenseAdapter)mAdapter).getUsersIPaidFor().size() > 0)
@@ -93,23 +99,24 @@ public class ExpenseDetails extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-            photo.setImageBitmap(imageBitmap);
+            picture.setImageBitmap(imageBitmap);
         }
     }
 
-    private void addExpenseToFireBase(final FirebaseDatabase database)
-    {
-        Expense newExpense = new Expense("id", description.getText().toString(),Double.parseDouble(bill.getText().toString()), //continue from here!!!!!!!!
-        ;
+    private void addExpenseToFireBase(final FirebaseDatabase database) {
 
-        //לעשות את זה דבר ראשון שאני פותח את הפרוייקט!!!!!!
+        String usersIPaidFor = ((ExpenseAdapter)mAdapter).getUsersIPaidFor().toString();
+        usersIPaidFor = usersIPaidFor.substring(1, usersIPaidFor.length() - 1); //remove [ ] from ArrayList.toString
+
+        Expense newExpense = new Expense(description.getText().toString(),Double.parseDouble(bill.getText().toString()),mAuth.getCurrentUser().getUid() ,usersIPaidFor);
+        String expKey = database.getReference().child("Events").child(this.eventID).child("Expenses").push().getKey();
+        database.getReference().child("Events").child(this.eventID).child("Expenses").child(expKey).setValue(newExpense);
 
 
-        Intent i = new Intent(this,EventMenu.class);
-        startActivity(i);
+
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
+        finish();
     }
-
-
-
 
 }

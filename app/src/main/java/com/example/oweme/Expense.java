@@ -1,24 +1,34 @@
 package com.example.oweme;
 
+import android.net.Uri;
+
 public class Expense {
 
-    String eid;
     String description;
     long CreatedDate;
     double amount;
     String owner;
     String members;
+    Uri picture;
 
 
-    public Expense(String eid, String description, double amount, String owner, String members) {
+    public Expense(String description, double amount, String owner, String members) {
 
-        this.eid = eid;
         this.description = description;
         this.CreatedDate = System.currentTimeMillis();
         this.amount = amount;
         this.owner = owner;
         this.members = members;
+       // this.picture = picture; להוסיף תמונה!!!!
     }
+
+    public long getCreatedDate() { return CreatedDate; }
+
+    public void setCreatedDate(long createdDate) { CreatedDate = createdDate; }
+
+    public Uri getPicture() { return picture; }
+
+    public void setPicture(Uri picture) { this.picture = picture; }
 
     public String getDescription() {
         return description;
@@ -26,14 +36,6 @@ public class Expense {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getEid() {
-        return eid;
-    }
-
-    public void setEid(String eid) {
-        this.eid = eid;
     }
 
     public long getDate() {

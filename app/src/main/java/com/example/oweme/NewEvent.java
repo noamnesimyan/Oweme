@@ -24,7 +24,6 @@ public class NewEvent extends AppCompatActivity {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
-   // private FirebaseAuth mAuth;
 
 
     @Override
@@ -38,7 +37,6 @@ public class NewEvent extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new NewEventAdapter(this); // specify an adapter
         recyclerView.setAdapter(mAdapter);
-      //  mAuth = FirebaseAuth.getInstance();
 
         findViewById(R.id.createNewEvent).setOnClickListener(new View.OnClickListener() {
             @Override
