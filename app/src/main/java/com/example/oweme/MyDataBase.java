@@ -6,7 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(version = 1, entities = {Depth.class})
+@Database(version = 1, entities = {Depth.class}, exportSchema = false)
 public abstract class MyDataBase extends RoomDatabase {
 
     abstract public MyDao getMyDao();
@@ -21,7 +21,7 @@ public abstract class MyDataBase extends RoomDatabase {
         return instance;
     }
 
-    private MyDataBase() { }
+    public MyDataBase() { }
 
     private static MyDataBase create(final Context context) {
         return Room.databaseBuilder(context, MyDataBase.class, DB_NAME).build();

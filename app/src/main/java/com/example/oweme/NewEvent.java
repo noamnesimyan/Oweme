@@ -42,12 +42,10 @@ public class NewEvent extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(((NewEventAdapter)mAdapter).getuIDs().size() > 0)
-                {
+                if(((NewEventAdapter)mAdapter).getuIDs().size() > 0) {
                     addEventToFireBase(database);
                 }
-                else
-                {
+                else {
                     Toast.makeText(NewEvent.this, "You have to add at least 1 person to the event", Toast.LENGTH_LONG).show();
                 }
 

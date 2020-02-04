@@ -6,8 +6,10 @@ import android.os.IBinder;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -38,7 +40,16 @@ public class FirebaseListener extends Service {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String events = (String)dataSnapshot.getValue();
-                myEvents = events.split(",");
+                String[] newEvents = events.split(","); //we assume that we only add events and it will be the last one in the array
+                //לדבג תחרא הזה!
+                if (myEvents == null) {
+                    for (int i = 0; i < newEvents.length; i++)
+                        listenToEventExpenses(newEvents[i]);
+                }
+                else  if (newEvents.length > myEvents.length)
+                    listenToEventExpenses(newEvents[newEvents.length-1]);
+                myEvents = newEvents;
+                //send notification if new event was added
             }
 
             @Override
@@ -48,9 +59,38 @@ public class FirebaseListener extends Service {
         });
     }
 
-    private void listenToEventExpenses()
+
+
+    private void listenToEventExpenses(String eventID)
     {
-        //להמשיך מכאן!!! לעשות ליסנר שמאזין לאיבנטים שלי ובכל פעם שמישהו אחר עושה עליי הוצאה חדשה אז קופץ בטלפון שלי טוסט
+        database.getReference().child("Events").child(eventID).child("Expenses").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Expense expense = dataSnapshot.getValue(Expense.class);
+                Toast.makeText(FirebaseListener.this, expense.getDescription(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
 

@@ -1,8 +1,6 @@
 package com.example.oweme;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
-
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
