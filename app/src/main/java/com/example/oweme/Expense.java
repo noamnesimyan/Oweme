@@ -10,15 +10,27 @@ public class Expense {
     String owner;
     String members;
     Uri picture;
+    String eid;//expense id
 
 
-    public Expense(String description, double amount, String owner, String members) {
+    public Expense(){}
+
+    public String getEid() {
+        return eid;
+    }
+
+    public void setEid(String eid) {
+        this.eid = eid;
+    }
+
+    public Expense(String description, double amount, String owner, String members, String eid) {
 
         this.description = description;
         this.CreatedDate = System.currentTimeMillis();
         this.amount = amount;
         this.owner = owner;
         this.members = members;
+        this.eid = eid;
        // this.picture = picture; להוסיף תמונה!!!!
     }
 

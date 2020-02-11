@@ -41,13 +41,13 @@ public class FirebaseListener extends Service {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String events = (String)dataSnapshot.getValue();
                 String[] newEvents = events.split(","); //we assume that we only add events and it will be the last one in the array
-                //לדבג תחרא הזה!
                 if (myEvents == null) {
                     for (int i = 0; i < newEvents.length; i++)
                         listenToEventExpenses(newEvents[i]);
                 }
                 else  if (newEvents.length > myEvents.length)
                     listenToEventExpenses(newEvents[newEvents.length-1]);
+
                 myEvents = newEvents;
                 //send notification if new event was added
             }

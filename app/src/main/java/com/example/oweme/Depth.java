@@ -9,7 +9,6 @@ public class Depth {
 
     @PrimaryKey
     @NonNull
-    private String userID;
     private double amount;
 
     public Depth(String userID, double amount) {
@@ -29,6 +28,7 @@ public class Depth {
         return amount;
     }
 
+    private String userID;
     public void setAmount(double amount) {
         this.amount = amount;
     }

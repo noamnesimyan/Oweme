@@ -56,11 +56,13 @@ public class ExpenseDetails extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
         picture = findViewById(R.id.photo);
         eventID = getIntent().getStringExtra("EventID");
+        description = findViewById(R.id.description);
+        bill = findViewById(R.id.bill);
+
         eventDate = findViewById(R.id.date);
         String date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
         eventDate.setText("Creation Date: " + date);
-        description = findViewById(R.id.description);
-        bill = findViewById(R.id.bill);
+
 
         findViewById(R.id.createExpenseBTN).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,13 +108,12 @@ public class ExpenseDetails extends AppCompatActivity {
     private void addExpenseToFireBase(final FirebaseDatabase database) {
 
         String usersIPaidFor = ((ExpenseAdapter)mAdapter).getUsersIPaidFor().toString();
-        usersIPaidFor = usersIPaidFor.substring(1, usersIPaidFor.length() - 1); //remove [ ] from ArrayList.toString
+        usersIPaidFor = usersIPaidFor.substring(1, usersIPaidFor.length() - 1); //removes '[' and ']' from ArrayList.toString
 
-        Expense newExpense = new Expense(description.getText().toString(),Double.parseDouble(bill.getText().toString()),mAuth.getCurrentUser().getUid() ,usersIPaidFor);
         String expKey = database.getReference().child("Events").child(this.eventID).child("Expenses").push().getKey();
+        Expense newExpense = new Expense(description.getText().toString(), Double.parseDouble(bill.getText().toString()), mAuth.getCurrentUser().getUid(), usersIPaidFor, expKey);
+
         database.getReference().child("Events").child(this.eventID).child("Expenses").child(expKey).setValue(newExpense);
-
-
 
         Intent intent = new Intent();
         setResult(RESULT_OK, intent);

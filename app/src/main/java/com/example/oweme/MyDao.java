@@ -19,5 +19,5 @@ public interface MyDao {
     @Query("SELECT * FROM MyDepths")
     public List<Depth> getAllDepths();
 
-
+    // public boolean exist(Expense expense) להתחיל מכאן
 }
