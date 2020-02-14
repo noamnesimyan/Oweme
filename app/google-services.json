@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1081017149495",
+    "firebase_url": "https://oweme-c956d.firebaseio.com",
+    "project_id": "oweme-c956d",
+    "storage_bucket": "oweme-c956d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1081017149495:android:eac0692212e7b25c00f7b2",
+        "android_client_info": {
+          "package_name": "com.example.oweme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1081017149495-qbf9pkvcjlutvf63nrl3754fjhpp1bv9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.oweme",
+            "certificate_hash": "045edf21deb2dcd17b62a635a55d4777e667cc6c"
+          }
+        },
+        {
+          "client_id": "1081017149495-4dok2lmujcvbqgfjenq5124rpi0h64mh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNBk-yJHw1c4aHyHgcCRRRIV1byGqGjgw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1081017149495-4dok2lmujcvbqgfjenq5124rpi0h64mh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
