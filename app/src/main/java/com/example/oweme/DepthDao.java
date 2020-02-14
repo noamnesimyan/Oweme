@@ -8,7 +8,7 @@ import androidx.room.Query;
 import java.util.List;
 
 @Dao
-public interface MyDao {
+public interface DepthDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void addNewDepth(Depth newDepth);
@@ -19,5 +19,4 @@ public interface MyDao {
     @Query("SELECT * FROM MyDepths")
     public List<Depth> getAllDepths();
 
-    // public boolean exist(Expense expense) להתחיל מכאן
 }

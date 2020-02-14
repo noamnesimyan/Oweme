@@ -75,11 +75,11 @@
             android:id="@+id/justAText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
             android:layout_marginTop="70dp"
-            android:textStyle="italic|bold"
+            android:text="@string/choose"
+            android:textAlignment="center"
             android:textColor="#000000"
-            android:text="@string/choose" />
+            android:textStyle="italic|bold" />
 
         <androidx.recyclerview.widget.RecyclerView
 

@@ -66,8 +66,16 @@ public class FirebaseListener extends Service {
         database.getReference().child("Events").child(eventID).child("Expenses").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Expense expense = dataSnapshot.getValue(Expense.class);
-                Toast.makeText(FirebaseListener.this, expense.getDescription(), Toast.LENGTH_LONG).show();
+                Expense newExpense = dataSnapshot.getValue(Expense.class);
+
+                if (MyDataBase.getInstance(FirebaseListener.this).count(newExpense.getExpenseID()) == 0) {
+                    MyDataBase.getInstance(FirebaseListener.this).addNewExpense(newExpense);
+                }
+                else {
+                    Toast.makeText(FirebaseListener.this, "Already added", Toast.LENGTH_LONG).show();
+                }
+
+                Toast.makeText(FirebaseListener.this, newExpense.getDescription(), Toast.LENGTH_LONG).show();
             }
 
             @Override

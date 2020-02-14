@@ -1,7 +1,6 @@
 package com.example.oweme;
 
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -23,7 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class ExpenseAdapter extends RecyclerView.Adapter {
+public class ExpenseDetailsAdapter extends RecyclerView.Adapter {
 
     private ArrayList<User> users;
     private ArrayList<String> checkedUsers;
@@ -34,9 +32,9 @@ public class ExpenseAdapter extends RecyclerView.Adapter {
         private TextView textView;
         private ImageView imageView;
         private CheckBox checkBox;
-        private ExpenseAdapter myAdapter;
+        private ExpenseDetailsAdapter myAdapter;
 
-        public MyViewHolder(final View item, ExpenseAdapter myAdapter) {
+        public MyViewHolder(final View item, ExpenseDetailsAdapter myAdapter) {
 
             super(item);
             textView = item.findViewById(R.id.nickName);
@@ -69,7 +67,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public ExpenseAdapter(ArrayList<String> checkedUsers) {
+    public ExpenseDetailsAdapter(ArrayList<String> checkedUsers) {
 
         this.users = new ArrayList<User>();
         this.checkedUsers = checkedUsers;
@@ -98,13 +96,12 @@ public class ExpenseAdapter extends RecyclerView.Adapter {
         }
     }
 
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View newView = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
-        ExpenseAdapter.MyViewHolder vh = new ExpenseAdapter.MyViewHolder(newView, this);
+        View newView = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.member, parent, false);
+        ExpenseDetailsAdapter.MyViewHolder vh = new ExpenseDetailsAdapter.MyViewHolder(newView, this);
         return vh;
     }
 

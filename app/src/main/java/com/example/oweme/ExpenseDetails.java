@@ -1,13 +1,12 @@
 package com.example.oweme;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -15,12 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,7 +47,7 @@ public class ExpenseDetails extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);  // use a linear layout manager
         recyclerView.setLayoutManager(layoutManager);
         selectedUsersIDS = getIntent().getStringArrayListExtra("SelectedUsers");
-        mAdapter = new ExpenseAdapter(selectedUsersIDS); // specify an adapter
+        mAdapter = new ExpenseDetailsAdapter(selectedUsersIDS); // specify an adapter
         mAuth = FirebaseAuth.getInstance();
         recyclerView.setAdapter(mAdapter);
         picture = findViewById(R.id.photo);
@@ -67,9 +63,9 @@ public class ExpenseDetails extends AppCompatActivity {
         findViewById(R.id.createExpenseBTN).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(((ExpenseAdapter)mAdapter).getUsersIPaidFor().size() > 0)
+                if(((ExpenseDetailsAdapter)mAdapter).getUsersIPaidFor().size() > 0)
                 {
-                    addExpenseToFireBase(database);
+                    addExpenseToDBs(database);
                 }
                 else
                 {
@@ -105,15 +101,18 @@ public class ExpenseDetails extends AppCompatActivity {
         }
     }
 
-    private void addExpenseToFireBase(final FirebaseDatabase database) {
+    private void addExpenseToDBs(final FirebaseDatabase database) {
 
-        String usersIPaidFor = ((ExpenseAdapter)mAdapter).getUsersIPaidFor().toString();
+        String usersIPaidFor = ((ExpenseDetailsAdapter)mAdapter).getUsersIPaidFor().toString();
         usersIPaidFor = usersIPaidFor.substring(1, usersIPaidFor.length() - 1); //removes '[' and ']' from ArrayList.toString
 
         String expKey = database.getReference().child("Events").child(this.eventID).child("Expenses").push().getKey();
         Expense newExpense = new Expense(description.getText().toString(), Double.parseDouble(bill.getText().toString()), mAuth.getCurrentUser().getUid(), usersIPaidFor, expKey);
+        newExpense.setEventID(this.eventID);
+        database.getReference().child("Events").child(this.eventID).child("Expenses").child(expKey).setValue(newExpense); //add expense to FireBase
 
-        database.getReference().child("Events").child(this.eventID).child("Expenses").child(expKey).setValue(newExpense);
+        MyDataBase.getInstance(ExpenseDetails.this).addNewExpense(newExpense); // add expense to local DB
+       // MyDataBase.getInstance(ExpenseDetails.this).addNewDepth(); // להתחיל מכאן! להוסיף את החוב לDB הלוקאלי
 
         Intent intent = new Intent();
         setResult(RESULT_OK, intent);

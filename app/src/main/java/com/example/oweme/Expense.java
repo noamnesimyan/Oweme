@@ -2,36 +2,45 @@ package com.example.oweme;
 
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "myExpenses")
 public class Expense {
 
+    @Ignore
     String description;
+    @Ignore
     long CreatedDate;
+    @Ignore
     double amount;
+    @Ignore
     String owner;
+    @Ignore
     String members;
+    @Ignore
     Uri picture;
-    String eid;//expense id
+
+    @PrimaryKey
+    @NonNull
+    String expenseID;
+    @NonNull
+    String eventID; //The event that the expense belongs to
 
 
     public Expense(){}
 
-    public String getEid() {
-        return eid;
-    }
-
-    public void setEid(String eid) {
-        this.eid = eid;
-    }
-
-    public Expense(String description, double amount, String owner, String members, String eid) {
+    public Expense(String description, double amount, String owner, String members, String expenseID) {
 
         this.description = description;
         this.CreatedDate = System.currentTimeMillis();
         this.amount = amount;
         this.owner = owner;
         this.members = members;
-        this.eid = eid;
-       // this.picture = picture; להוסיף תמונה!!!!
+        this.expenseID = expenseID;
+       // this.picture = picture; להוסיף תמונה
     }
 
     public long getCreatedDate() { return CreatedDate; }
@@ -80,5 +89,20 @@ public class Expense {
 
     public void setMembers(String members) {
         this.members = members;
+    }
+    public String getEventID() {
+        return eventID;
+    }
+
+    public void setEventID(String eventID) {
+        this.eventID = eventID;
+    }
+
+    public String getExpenseID() {
+        return expenseID;
+    }
+
+    public void setExpenseID(String expenseID) {
+        this.expenseID = expenseID;
     }
 }

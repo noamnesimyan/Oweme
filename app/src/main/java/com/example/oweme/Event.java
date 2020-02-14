@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Event {
 
-    String eid;
+    String eventID;
     String eventName;
     String status;
     String members;
@@ -14,9 +14,9 @@ public class Event {
     public Event() {
     }
 
-    public Event(String eid, String eventName, String status, String members) {
+    public Event(String eventID, String eventName, String status, String members) {
 
-        this.eid = eid;
+        this.eventID = eventID;
         this.eventName = eventName;
         this.status = status;
         this.members = members;
@@ -35,10 +35,10 @@ public class Event {
     public void setExpenses(ArrayList<Expense> expenses) { this.expenses = expenses; }
 
     public String getEid() {
-        return eid;
+        return eventID;
     }
 
-    public void setEid(String eid) { this.eid = eid; }
+    public void setEventID(String eventID) { this.eventID = eventID; }
 
     public String getEventName() {
         return eventName;

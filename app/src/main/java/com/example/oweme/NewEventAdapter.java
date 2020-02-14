@@ -117,7 +117,7 @@ public class NewEventAdapter extends RecyclerView.Adapter<NewEventAdapter.MyView
     @Override
     public NewEventAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // create a new view
-        View newView = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
+        View newView = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.member, parent, false);
         NewEventAdapter.MyViewHolder vh = new MyViewHolder(newView, this);
         return vh;
     }
