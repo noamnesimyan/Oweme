@@ -73,6 +73,7 @@ public class ExpenseDetails extends AppCompatActivity {
                 } else {
                     Toast.makeText(ExpenseDetails.this, "You have to pay for at least 1 person \n(it can be you either)", Toast.LENGTH_LONG).show();
                 }
+                break;
         }
     }
 
@@ -105,7 +106,7 @@ public class ExpenseDetails extends AppCompatActivity {
 
         String[] members = newExpense.getMembers().split(", "); //fix all this spaces
         double bill = newExpense.getAmount() / members.length;
-        Depth newDepth = new Depth(mAuth.getCurrentUser().getUid(), bill);
+        Depth newDepth = new Depth(mAuth.getCurrentUser().getUid(), bill);                                   // continue from here!
         if(myLocalDB.getDepthByUid(newDepth.getUserID()) == null) {
             myLocalDB.updateDepth(newDepth);
         }
