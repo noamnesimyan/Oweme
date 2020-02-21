@@ -16,10 +16,15 @@ public abstract class MyDataBase extends RoomDatabase implements ExpenseDao, Dep
 
     private static final String DB_NAME = "MyDataBase.db";
     private static volatile MyDataBase instance;
+    private static DepthDao depthDao;
+    private static ExpenseDao expenseDao;
+
 
     static synchronized MyDataBase getInstance(Context context) {
         if (instance == null) {
             instance = create(context);
+            depthDao= instance.getDepthDao();
+            expenseDao = instance.getExpenseDao();
         }
         return instance;
     }
@@ -32,7 +37,17 @@ public abstract class MyDataBase extends RoomDatabase implements ExpenseDao, Dep
 
     @Override
     public void addNewExpense(Expense newExpense) {
-        getExpenseDao().addNewExpense(newExpense);
+        expenseDao.addNewExpense(newExpense);
+    }
+
+    @Override
+    public void updateDepth(Depth newDepth) {
+        depthDao.updateDepth(newDepth);
+    }
+
+
+    public boolean exist(Expense expense) {
+        return (expenseDao.count(expense.getExpenseID()) != 0);
     }
 
     @Override
@@ -40,10 +55,6 @@ public abstract class MyDataBase extends RoomDatabase implements ExpenseDao, Dep
         return getExpenseDao().count(expenseID);
     }
 
-    @Override
-    public void addNewDepth(Depth newDepth) {
-        getDepthDao().addNewDepth(newDepth);
-    }
 
     @Override
     public void deleteDepth() {
@@ -53,5 +64,10 @@ public abstract class MyDataBase extends RoomDatabase implements ExpenseDao, Dep
     @Override
     public List<Depth> getAllDepths() {
         return getDepthDao().getAllDepths();
+    }
+
+    @Override
+    public Depth getDepthByUid(String uid) {
+        return depthDao.getDepthByUid(uid);
     }
 }

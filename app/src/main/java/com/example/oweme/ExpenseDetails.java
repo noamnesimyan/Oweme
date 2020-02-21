@@ -36,7 +36,7 @@ public class ExpenseDetails extends AppCompatActivity {
     private TextView bill;
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private FirebaseAuth mAuth;
-    private MyDataBase myDB;
+    private MyDataBase myLocalDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,25 +54,11 @@ public class ExpenseDetails extends AppCompatActivity {
         eventID = getIntent().getStringExtra("EventID");
         description = findViewById(R.id.description);
         bill = findViewById(R.id.bill);
+        myLocalDB = MyDataBase.getInstance(ExpenseDetails.this);
 
         eventDate = findViewById(R.id.date);
         String date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
         eventDate.setText("Creation Date: " + date);
-
-
-        findViewById(R.id.createExpenseBTN).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(((ExpenseDetailsAdapter)mAdapter).getUsersIPaidFor().size() > 0)
-                {
-                    addExpenseToDBs(database);
-                }
-                else
-                {
-                    Toast.makeText(ExpenseDetails.this, "You have to pay for at least 1 person \n(it can be you either)", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
     }
 
     public void onClick(View view) {
@@ -81,14 +67,18 @@ public class ExpenseDetails extends AppCompatActivity {
             case R.id.takePhoto:
                 takeAPhoto();
                 break;
+            case R.id.createExpenseBTN:
+                if (((ExpenseDetailsAdapter) mAdapter).getUsersIPaidFor().size() > 0) {
+                    addExpenseToDBs(database);
+                } else {
+                    Toast.makeText(ExpenseDetails.this, "You have to pay for at least 1 person \n(it can be you either)", Toast.LENGTH_LONG).show();
+                }
         }
     }
 
-    private void takeAPhoto()
-    {
+    private void takeAPhoto() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null)
-        {
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
@@ -103,7 +93,7 @@ public class ExpenseDetails extends AppCompatActivity {
 
     private void addExpenseToDBs(final FirebaseDatabase database) {
 
-        String usersIPaidFor = ((ExpenseDetailsAdapter)mAdapter).getUsersIPaidFor().toString();
+        String usersIPaidFor = ((ExpenseDetailsAdapter) mAdapter).getUsersIPaidFor().toString();
         usersIPaidFor = usersIPaidFor.substring(1, usersIPaidFor.length() - 1); //removes '[' and ']' from ArrayList.toString
 
         String expKey = database.getReference().child("Events").child(this.eventID).child("Expenses").push().getKey();
@@ -111,8 +101,19 @@ public class ExpenseDetails extends AppCompatActivity {
         newExpense.setEventID(this.eventID);
         database.getReference().child("Events").child(this.eventID).child("Expenses").child(expKey).setValue(newExpense); //add expense to FireBase
 
-        MyDataBase.getInstance(ExpenseDetails.this).addNewExpense(newExpense); // add expense to local DB
-       // MyDataBase.getInstance(ExpenseDetails.this).addNewDepth(); // להתחיל מכאן! להוסיף את החוב לDB הלוקאלי
+        myLocalDB.addNewExpense(newExpense); // add expense to local DB
+
+        String[] members = newExpense.getMembers().split(", "); //fix all this spaces
+        double bill = newExpense.getAmount() / members.length;
+        Depth newDepth = new Depth(mAuth.getCurrentUser().getUid(), bill);
+        if(myLocalDB.getDepthByUid(newDepth.getUserID()) == null) {
+            myLocalDB.updateDepth(newDepth);
+        }
+        else {
+            Depth oldDepth = myLocalDB.getDepthByUid(newDepth.getUserID());
+            oldDepth.setAmount(oldDepth.getAmount() + bill);
+            myLocalDB.updateDepth(oldDepth);
+        }
 
         Intent intent = new Intent();
         setResult(RESULT_OK, intent);

@@ -22,6 +22,7 @@ public class FirebaseListener extends Service {
     static FirebaseDatabase database = FirebaseDatabase.getInstance();
     private static FirebaseAuth mAuth  = FirebaseAuth.getInstance();
     private String[] myEvents;
+    private MyDataBase myLocalDB;
 
     public FirebaseListener() {
 
@@ -30,6 +31,7 @@ public class FirebaseListener extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
       //  Toast.makeText(this, "service starting", Toast.LENGTH_LONG).show();
+        myLocalDB = MyDataBase.getInstance(this);
         refreshMyEvents();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -40,7 +42,7 @@ public class FirebaseListener extends Service {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String events = (String)dataSnapshot.getValue();
-                String[] newEvents = events.split(","); //we assume that we only add events and it will be the last one in the array
+                String[] newEvents = events.split(", "); //we assume that we only add events and it will be the last one in the array
                 if (myEvents == null) {
                     for (int i = 0; i < newEvents.length; i++)
                         listenToEventExpenses(newEvents[i]);
@@ -68,14 +70,27 @@ public class FirebaseListener extends Service {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Expense newExpense = dataSnapshot.getValue(Expense.class);
 
-                if (MyDataBase.getInstance(FirebaseListener.this).count(newExpense.getExpenseID()) == 0) {
-                    MyDataBase.getInstance(FirebaseListener.this).addNewExpense(newExpense);
+                if (!myLocalDB.exist(newExpense)) {
+                    myLocalDB.addNewExpense(newExpense);
+
+                    Depth newDepth = myLocalDB.getDepthByUid(newExpense.getOwner());
+
+                    String[] members = newExpense.getMembers().split(", "); //fix all this spaces
+                    double bill = newExpense.getAmount() / members.length;
+
+                        if (newDepth == null) {
+                            newDepth = new Depth(newExpense.getOwner(), -bill);
+                            myLocalDB.updateDepth(newDepth);
+                        }
+                        else {
+                            newDepth.setAmount(newDepth.getAmount() - bill);
+                            myLocalDB.updateDepth(newDepth);
+                        }
+                        //send notification
                 }
                 else {
                     Toast.makeText(FirebaseListener.this, "Already added", Toast.LENGTH_LONG).show();
                 }
-
-                Toast.makeText(FirebaseListener.this, newExpense.getDescription(), Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -100,7 +115,6 @@ public class FirebaseListener extends Service {
         });
 
     }
-
 
     @Override
     public IBinder onBind(Intent intent) {

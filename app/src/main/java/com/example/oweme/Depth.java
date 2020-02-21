@@ -9,9 +9,10 @@ public class Depth {
 
     @PrimaryKey
     @NonNull
-    private double amount;
-    @NonNull
     private String userID;
+
+    @NonNull
+    private double amount;
 
     public Depth(String userID, double amount) {
         this.userID = userID;
