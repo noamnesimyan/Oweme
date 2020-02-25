@@ -78,15 +78,19 @@ public class FirebaseListener extends Service {
                     String[] members = newExpense.getMembers().split(", "); //fix all this spaces
                     double bill = newExpense.getAmount() / members.length;
 
-                        if (newDepth == null) {
-                            newDepth = new Depth(newExpense.getOwner(), -bill);
-                            myLocalDB.updateDepth(newDepth);
-                        }
-                        else {
-                            newDepth.setAmount(newDepth.getAmount() - bill);
-                            myLocalDB.updateDepth(newDepth);
-                        }
-                        //send notification
+                    if (newDepth == null) {
+                        newDepth = new Depth(newExpense.getOwner(), -bill);
+                        myLocalDB.updateDepth(newDepth);
+                    }
+                    else {
+                        newDepth.setAmount(newDepth.getAmount() - bill);
+                        myLocalDB.updateDepth(newDepth);
+                    }
+
+                    updateMyBill(bill);
+
+
+                    //send notification
                 }
                 else {
                     Toast.makeText(FirebaseListener.this, "Already added", Toast.LENGTH_LONG).show();
@@ -126,5 +130,18 @@ public class FirebaseListener extends Service {
     public void onDestroy() {
         Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show();
     }
+
+    private void updateMyBill(double bill) {
+
+        Depth myBill = myLocalDB.getDepthByUid(mAuth.getCurrentUser().getUid()); //start from here! check if the bills are qualified in the local DB
+        if (myBill == null) {
+            myBill = new Depth(mAuth.getCurrentUser().getUid(), +bill);
+        }
+        else {
+            myBill.setAmount(myBill.getAmount() + bill);
+        }
+        myLocalDB.updateDepth(myBill);
+    }
+
 
 }

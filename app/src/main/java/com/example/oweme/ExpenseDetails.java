@@ -106,7 +106,7 @@ public class ExpenseDetails extends AppCompatActivity {
 
         String[] members = newExpense.getMembers().split(", "); //fix all this spaces
         double bill = newExpense.getAmount() / members.length;
-        Depth newDepth = new Depth(mAuth.getCurrentUser().getUid(), bill);                                   // continue from here!
+        Depth newDepth = new Depth(mAuth.getCurrentUser().getUid(), bill);                                   // continue from here ???
         if(myLocalDB.getDepthByUid(newDepth.getUserID()) == null) {
             myLocalDB.updateDepth(newDepth);
         }

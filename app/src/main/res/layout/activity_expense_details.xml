@@ -95,7 +95,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginHorizontal="150dp"
-            android:text="Done" />
+            android:text="Done"
+            android:onClick="onClick"/>
 
     </LinearLayout>
 </RelativeLayout>
