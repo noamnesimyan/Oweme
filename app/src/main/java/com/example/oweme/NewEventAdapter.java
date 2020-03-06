@@ -63,11 +63,11 @@ public class NewEventAdapter extends RecyclerView.Adapter<NewEventAdapter.MyView
                     if (isChecked) {
                         ((LinearLayout) checkBox.getParent()).setBackgroundColor(Color.LTGRAY);
                         myAdapter.uIDs.add(user.getUserID());
-                        members += ", " + user.getUserID();
+                        members += "," + user.getUserID();
                     } else {
                         ((LinearLayout) checkBox.getParent()).setBackgroundColor(Color.WHITE);
                         myAdapter.uIDs.remove(user.getUserID());
-                        members.replace(", " + user.getUserID(), "");
+                        members.replace("," + user.getUserID(), "");
                     }
                 }
             });

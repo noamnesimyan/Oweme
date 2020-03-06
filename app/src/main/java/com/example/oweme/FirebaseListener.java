@@ -42,7 +42,7 @@ public class FirebaseListener extends Service {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String events = (String)dataSnapshot.getValue();
-                String[] newEvents = events.split(", "); //we assume that we only add events and it will be the last one in the array
+                String[] newEvents = events.split(","); //we assume that we only add events and it will be the last one in the array
                 if (myEvents == null) {
                     for (int i = 0; i < newEvents.length; i++)
                         listenToEventExpenses(newEvents[i]);
@@ -75,9 +75,9 @@ public class FirebaseListener extends Service {
 
                     Depth newDepth = myLocalDB.getDepthByUid(newExpense.getOwner());
 
-                    String[] members = newExpense.getMembers().split(", "); //fix all this spaces
+                    String[] members = newExpense.getMembers().split(",");
                     double bill = newExpense.getAmount() / members.length;
-
+                                                                                                            //check if code is working!
                     if (newDepth == null) {
                         newDepth = new Depth(newExpense.getOwner(), -bill);
                         myLocalDB.updateDepth(newDepth);
@@ -86,9 +86,6 @@ public class FirebaseListener extends Service {
                         newDepth.setAmount(newDepth.getAmount() - bill);
                         myLocalDB.updateDepth(newDepth);
                     }
-
-                    updateMyBill(bill);
-
 
                     //send notification
                 }
@@ -130,18 +127,5 @@ public class FirebaseListener extends Service {
     public void onDestroy() {
         Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show();
     }
-
-    private void updateMyBill(double bill) {
-
-        Depth myBill = myLocalDB.getDepthByUid(mAuth.getCurrentUser().getUid()); //start from here! check if the bills are qualified in the local DB
-        if (myBill == null) {
-            myBill = new Depth(mAuth.getCurrentUser().getUid(), +bill);
-        }
-        else {
-            myBill.setAmount(myBill.getAmount() + bill);
-        }
-        myLocalDB.updateDepth(myBill);
-    }
-
 
 }

@@ -86,7 +86,7 @@ public class NewEvent extends AppCompatActivity {
                     {
                         // user.setEvents(user.getEvents() + newEvent.getEid());
                         database.getReference().child("Users").child(user.getUserID()).child("events").
-                                setValue(user.getEvents().isEmpty()? newEvent.getEid() : user.getEvents()+", " + newEvent.getEid());
+                                setValue(user.getEvents().isEmpty()? newEvent.getEid() : user.getEvents()+"," + newEvent.getEid());
                     }
                 }
                 mAdapter.notifyDataSetChanged(); //updates the list

@@ -96,7 +96,9 @@ public class ExpenseDetails extends AppCompatActivity {
 
         String usersIPaidFor = ((ExpenseDetailsAdapter) mAdapter).getUsersIPaidFor().toString();
         usersIPaidFor = usersIPaidFor.substring(1, usersIPaidFor.length() - 1); //removes '[' and ']' from ArrayList.toString
+        usersIPaidFor = usersIPaidFor.replaceAll(" ", ""); // removes the spaces from ArrayList.toString
 
+      //  String[] usersIPaidFor = (String[]) ((ExpenseDetailsAdapter) mAdapter).getUsersIPaidFor().toArray();
         String expKey = database.getReference().child("Events").child(this.eventID).child("Expenses").push().getKey();
         Expense newExpense = new Expense(description.getText().toString(), Double.parseDouble(bill.getText().toString()), mAuth.getCurrentUser().getUid(), usersIPaidFor, expKey);
         newExpense.setEventID(this.eventID);
@@ -104,17 +106,25 @@ public class ExpenseDetails extends AppCompatActivity {
 
         myLocalDB.addNewExpense(newExpense); // add expense to local DB
 
-        String[] members = newExpense.getMembers().split(", "); //fix all this spaces
+        String[] members = newExpense.getMembers().split(",");
         double bill = newExpense.getAmount() / members.length;
-        Depth newDepth = new Depth(mAuth.getCurrentUser().getUid(), bill);                                   // continue from here ???
-        if(myLocalDB.getDepthByUid(newDepth.getUserID()) == null) {
-            myLocalDB.updateDepth(newDepth);
-        }
-        else {
-            Depth oldDepth = myLocalDB.getDepthByUid(newDepth.getUserID());
-            oldDepth.setAmount(oldDepth.getAmount() + bill);
-            myLocalDB.updateDepth(oldDepth);
-        }
+
+
+        for(int i = 0; i < members.length; i++) {
+
+            if(!members[i].equals(mAuth.getCurrentUser().getUid())) {
+
+                Depth depth = myLocalDB.getDepthByUid(members[i]);
+                if(depth == null) {
+                    Depth newDepth = new Depth(members[i], bill);
+                    myLocalDB.updateDepth(newDepth);
+                }
+                else {
+                    depth.setAmount(depth.getAmount() + bill);
+                    myLocalDB.updateDepth(depth);
+                }
+            }
+        } //local db shows old data problem - fix that!
 
         Intent intent = new Intent();
         setResult(RESULT_OK, intent);
