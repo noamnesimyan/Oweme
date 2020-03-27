@@ -13,10 +13,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".EventsHistory"></activity>
+
         <service
             android:name=".FirebaseListener"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity android:name=".ExpenseDetails" />
         <activity android:name=".EventMenu" />

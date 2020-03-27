@@ -17,12 +17,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClick(View view) {
         int id = view.getId();
+        Intent i;
         switch (id) {
             case R.id.createEventBTN:
-                moveToNewEventActivity();
+                i = new Intent(this, NewEvent.class);
+                startActivity(i);
                 break;
 
             case R.id.historyBTN:
+                i = new Intent(this, EventsHistory.class);
+                startActivity(i);
                 break;
 
             case R.id.myAccountBTN:
@@ -30,10 +34,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void moveToNewEventActivity(){
-        Intent i = new Intent(this, NewEvent.class);
-        startActivity(i);
-    }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);

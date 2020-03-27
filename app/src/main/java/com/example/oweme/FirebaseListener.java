@@ -77,7 +77,7 @@ public class FirebaseListener extends Service {
 
                     String[] members = newExpense.getMembers().split(",");
                     double bill = newExpense.getAmount() / members.length;
-                                                                                                            //check if code is working!
+
                     if (newDepth == null) {
                         newDepth = new Depth(newExpense.getOwner(), -bill);
                         myLocalDB.updateDepth(newDepth);
@@ -90,7 +90,7 @@ public class FirebaseListener extends Service {
                     //send notification
                 }
                 else {
-                    Toast.makeText(FirebaseListener.this, "Already added", Toast.LENGTH_LONG).show();
+                    // Toast.makeText(FirebaseListener.this, "Already added", Toast.LENGTH_LONG).show();
                 }
             }
 

@@ -46,7 +46,6 @@ public class ExpenseDetailsAdapter extends RecyclerView.Adapter {
 
         public void bindData(final User user) {
             this.textView.setText(user.getNickName());
-            //   this.imageView.setImageURI(Uri.parse((user.getUrlPhoto())));
             Glide.with(this.imageView.getContext())
                     .load(user.getUrlPhoto())
                     .into(this.imageView);
