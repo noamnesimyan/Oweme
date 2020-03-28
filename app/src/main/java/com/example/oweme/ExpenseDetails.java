@@ -143,7 +143,7 @@ public class ExpenseDetails extends AppCompatActivity {
                     String downloadUri = task.getResult().toString();
                     Expense newExpense = new Expense();
                     newExpense.setUrlPhoto(downloadUri);
-                    addExpenseToDBs(newExpense);
+                    addExpenseToDBs(newExpense, ExpenseDetails.this);
 
                 } else {
                     // Handle failures
@@ -153,7 +153,7 @@ public class ExpenseDetails extends AppCompatActivity {
         });
     }
 
-    private void addExpenseToDBs(Expense newExpense) {
+    private void addExpenseToDBs(final Expense newExpense, final Context context) {
 
         String usersIPaidFor = ((ExpenseDetailsAdapter) mAdapter).getUsersIPaidFor().toString();
         usersIPaidFor = usersIPaidFor.substring(1, usersIPaidFor.length() - 1); //removes '[' and ']' from ArrayList.toString
@@ -163,38 +163,42 @@ public class ExpenseDetails extends AppCompatActivity {
         newExpense.setAmount(Double.parseDouble(bill.getText().toString()));
         newExpense.setOwner(mAuth.getCurrentUser().getUid());
         newExpense.setMembers(usersIPaidFor);
+        newExpense.setCreatedDate(System.currentTimeMillis());
         newExpense.setExpenseID(expenseID);
         newExpense.setEventID(this.eventID);
-        database.getReference().child("Events").child(this.eventID).child("Expenses").child(expenseID).setValue(newExpense); //add expense to FireBase
+        database.getReference().child("Events").child(this.eventID).child("Expenses").child(expenseID).setValue(newExpense).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                myLocalDB.addNewExpense(newExpense); // add expense to local DB
 
-        myLocalDB.addNewExpense(newExpense); // add expense to local DB
-
-        String[] members = newExpense.getMembers().split(",");
-        double bill = newExpense.getAmount() / members.length;
+                String[] members = newExpense.getMembers().split(",");
+                double bill = newExpense.getAmount() / members.length;
 
 
-        for(int i = 0; i < members.length; i++) {
+                for(int i = 0; i < members.length; i++) {
 
-            if(!members[i].equals(mAuth.getCurrentUser().getUid())) {
+                    if(!members[i].equals(mAuth.getCurrentUser().getUid())) {
 
-                Depth depth = myLocalDB.getDepthByUid(members[i]);
-                if(depth == null) {
-                    Depth newDepth = new Depth(members[i], bill);
-                    myLocalDB.updateDepth(newDepth);
+                        Depth depth = myLocalDB.getDepthByUid(members[i]);
+                        if(depth == null) {
+                            Depth newDepth = new Depth(members[i], bill);
+                            myLocalDB.updateDepth(newDepth);
+                        }
+                        else {
+                            depth.setAmount(depth.getAmount() + bill);
+                            myLocalDB.updateDepth(depth);
+                        }
+                    }
                 }
-                else {
-                    depth.setAmount(depth.getAmount() + bill);
-                    myLocalDB.updateDepth(depth);
-                }
+                hideProgress();
+
+                Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
+                finish();
             }
-        }
-        hideProgress();
+        }); //add expense to FireBase
 
-        Intent intent = new Intent(this, EventMenu.class);
-        startActivity(intent);
 
-        //setResult(RESULT_OK, intent);
-       // finish();
     }
 
     public void showProgress() {

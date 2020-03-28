@@ -31,14 +31,13 @@ public class EventMenu extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_events_history);
+        setContentView(R.layout.activity_event_menu);
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);  // use a linear layout manager
         recyclerView.setLayoutManager(layoutManager);
         eventID = getIntent().getStringExtra("EventID");
         mAdapter = new EventMenuAdapter(this, eventID); // specify an adapter
-        recyclerView.setAdapter(mAdapter);
         recyclerView.setAdapter(mAdapter);
         eventName = findViewById(R.id.eventName);
         eventDate = findViewById(R.id.date);
@@ -59,20 +58,28 @@ public class EventMenu extends AppCompatActivity {
         }
     }
     
-    private void moveToExpenseDetails()
-    {
+    private void moveToExpenseDetails() {
         Intent i = new Intent(this, ExpenseDetails.class);
         selectedUsersIDS = getIntent().getStringArrayListExtra("SelectedUsers");
-        i.putStringArrayListExtra("SelectedUsers",selectedUsersIDS);
+        i.putStringArrayListExtra("SelectedUsers", selectedUsersIDS);
         i.putExtra("EventID", this.eventID);
         startActivityForResult(i, PICK_CONTACT_REQUEST);
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == PICK_CONTACT_REQUEST && resultCode == RESULT_OK) {
+            recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+            recyclerView.setHasFixedSize(true);
+            layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);  // use a linear layout manager
+            recyclerView.setLayoutManager(layoutManager);
+            eventID = getIntent().getStringExtra("EventID");
+            mAdapter = new EventMenuAdapter(this, eventID); // specify an adapter
+            recyclerView.setAdapter(mAdapter);
+
             Toast.makeText(EventMenu.this, "Expense completed", Toast.LENGTH_LONG).show();
         }
     }
+
 
 
 }
