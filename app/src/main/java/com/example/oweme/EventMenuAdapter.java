@@ -55,10 +55,11 @@ public class EventMenuAdapter extends RecyclerView.Adapter {
             this.members.setText("...");
             Glide.with(this.picture.getContext()).load(expense.getUrlPhoto()).into(this.picture);
 
-            this.members.setOnClickListener(new View.OnClickListener() {
+            this.members.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public void onClick(View v) {
-                    context.startActivity(new Intent(context, Pop.class));
+                public boolean onLongClick(View v) {
+                    context.startActivity(new Intent(context, PopUpScreen.class));
+                    return false;
                 }
             });
         }
