@@ -1,7 +1,7 @@
 package com.example.oweme;
 
 import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,15 +35,18 @@ public class EventMenuAdapter extends RecyclerView.Adapter {
         private ImageView picture;
         private EventMenuAdapter myAdapter;
         private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        private FirebaseDatabase database = FirebaseDatabase.getInstance();
+        Context context;
 
 
-        public MyViewHolder(final View item, EventMenuAdapter myAdapter) {
+        public MyViewHolder(final View item, EventMenuAdapter myAdapter, Context context) {
 
             super(item);
             expenseDetails = item.findViewById(R.id.expenseDetails);
             members = item.findViewById(R.id.members);
             this.picture = item.findViewById(R.id.picture);
             this.myAdapter = myAdapter;
+            this.context = context;
 
         }
 
@@ -51,8 +54,16 @@ public class EventMenuAdapter extends RecyclerView.Adapter {
             this.expenseDetails.setText(mAuth.getCurrentUser().getDisplayName() + " paid " + expense.getAmount() + " NIS on " + expense.getDescription() + " for:");
             this.members.setText("...");
             Glide.with(this.picture.getContext()).load(expense.getUrlPhoto()).into(this.picture);
+
+            this.members.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    context.startActivity(new Intent(context, Pop.class));
+                }
+            });
         }
     }
+
 
     public EventMenuAdapter(Context context, String eventID) {
         this.expenses = new ArrayList<Expense>();
@@ -85,7 +96,7 @@ public class EventMenuAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View newView = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.expense_info, parent, false);
-        EventMenuAdapter.MyViewHolder vh = new EventMenuAdapter.MyViewHolder(newView, this);
+        EventMenuAdapter.MyViewHolder vh = new EventMenuAdapter.MyViewHolder(newView, this, context);
         return vh;
     }
 
