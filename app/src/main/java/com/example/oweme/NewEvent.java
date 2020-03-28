@@ -51,8 +51,6 @@ public class NewEvent extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     public void onClick(View view) {
@@ -69,7 +67,8 @@ public class NewEvent extends AppCompatActivity {
         final String members = ((NewEventAdapter)mAdapter).getMembers();
         String key = database.getReference().child("Events").push().getKey();
         final Event newEvent = new Event(key, this.eventName.getText().toString(),"active", members);
-        database.getReference().child("Events").child(key).setValue(newEvent).addOnCompleteListener(new OnCompleteListener<Void>() {
+        database.getReference().child("Events").child(key).setValue(newEvent).addOnCompleteListener(
+                new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 ((NewEventAdapter)mAdapter).moveToNewEvent(newEvent);

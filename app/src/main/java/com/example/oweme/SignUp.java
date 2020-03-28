@@ -48,7 +48,6 @@ public class SignUp extends AppCompatActivity {
     private ImageView imgPhoto;
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private boolean flag = false;
-    private boolean pickedImage = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +120,6 @@ public class SignUp extends AppCompatActivity {
         switch (id) {
             case R.id.btnGalery:
                 pickImage();
-                pickedImage = true;
                 break;
             case R.id.createUser:
                 findViewById(R.id.someText).setVisibility(View.VISIBLE);
@@ -177,86 +175,51 @@ public class SignUp extends AppCompatActivity {
                 });
     }
 
-    public static Bitmap drawableToBitmap (Drawable drawable) {
-
-        Bitmap bitmap = null;
-        if (drawable instanceof BitmapDrawable) {
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            if(bitmapDrawable.getBitmap() != null) {
-                return bitmapDrawable.getBitmap();
-            }
-        }
-
-        if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
-            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
-        } else {
-            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        }
-
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-        return bitmap;
-    }
-
     private void uploadImageIntoFB(final FirebaseUser user){
 
         showProgress();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Bitmap bitmap = (Bitmap) imgPhoto.getTag();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
 
-       /* imgPhoto.setDrawingCacheEnabled(true);
-        imgPhoto.buildDrawingCache();
-        Bitmap bitmap = Bitmap.createBitmap(imgPhoto.getDrawingCache());*/
+        final StorageReference storageRef = storage.getReference().child("UsersPhotos").child(user.getUid() + ".jpeg");
 
-
-        if(!pickedImage)
-        {
-            Bitmap bitmap = drawableToBitmap(Drawable.createFromPath("@mipmap/ic_launcher"));
-            imgPhoto.setImageBitmap(bitmap);
-            imgPhoto.setTag(bitmap);
-        }
-            Bitmap bitmap = (Bitmap) imgPhoto.getTag();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] data = baos.toByteArray();
-
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-
-            final StorageReference storageRef = storage.getReference().child("Photos").child(user.getUid() + ".jpeg");
-
-            UploadTask uploadTask = storageRef.putBytes(data);
-            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                @Override
-                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                    if (!task.isSuccessful()) {
-                        throw task.getException();
-                    }
-
-                    // Continue with the task to get the download URL
-                    return storageRef.getDownloadUrl();
+        UploadTask uploadTask = storageRef.putBytes(data);
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
                 }
-            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if (task.isSuccessful()) {
-                        Uri downloadUri = task.getResult();
-                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                .setDisplayName(mNickNameField.getText().toString())
-                                .setPhotoUri(downloadUri)
-                                .build();
-                        user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                addNewUser(user);
-                            }
-                        });
 
-                    } else {
+                // Continue with the task to get the download URL
+                return storageRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUri = task.getResult();
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                            .setDisplayName(mNickNameField.getText().toString())
+                            .setPhotoUri(downloadUri)
+                            .build();
+                    user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            addNewUser(user);
+                        }
+                    });
+
+                } else {
                         // Handle failures
                         // ...
-                    }
                 }
-            });
-        }
+            }
+        });
+    }
     public void showProgress() {
         mProgress.setVisibility(View.VISIBLE);
     }

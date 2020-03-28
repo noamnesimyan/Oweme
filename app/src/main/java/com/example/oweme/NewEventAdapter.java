@@ -89,8 +89,8 @@ public class NewEventAdapter extends RecyclerView.Adapter<NewEventAdapter.MyView
 
     private void getAllUsersFromFB() {
 
-        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-        mDatabase.getReference().child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        database.getReference().child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -124,12 +124,11 @@ public class NewEventAdapter extends RecyclerView.Adapter<NewEventAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.bindData(users.get(position));
+        ((NewEventAdapter.MyViewHolder)holder).bindData(users.get(position));
     }
 
     @Override
     public int getItemCount() {
-
         return users.size();
     }
 

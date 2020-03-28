@@ -99,7 +99,6 @@ public class EventsHistoryAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View newView = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.event_info, parent, false);
         EventsHistoryAdapter.MyViewHolder vh = new EventsHistoryAdapter.MyViewHolder(newView, this);
         return vh;

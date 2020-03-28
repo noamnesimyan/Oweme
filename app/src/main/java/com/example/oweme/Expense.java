@@ -21,7 +21,7 @@ public class Expense {
     @Ignore
     String members;
     @Ignore
-    Uri picture;
+    String urlPhoto;
 
     @PrimaryKey
     @NonNull
@@ -32,7 +32,7 @@ public class Expense {
 
     public Expense(){}
 
-    public Expense(String description, double amount, String owner, String members, String expenseID) {
+    public Expense(String description, double amount, String owner, String members, String expenseID, String urlPhoto) {
 
         this.description = description;
         this.CreatedDate = System.currentTimeMillis();
@@ -40,16 +40,16 @@ public class Expense {
         this.owner = owner;
         this.members = members;
         this.expenseID = expenseID;
-       // this.picture = picture; להוסיף תמונה
+        this.urlPhoto = urlPhoto;
     }
 
     public long getCreatedDate() { return CreatedDate; }
 
     public void setCreatedDate(long createdDate) { CreatedDate = createdDate; }
 
-    public Uri getPicture() { return picture; }
+    public String getUrlPhoto() { return urlPhoto; }
 
-    public void setPicture(Uri picture) { this.picture = picture; }
+    public void setUrlPhoto(String urlPhoto) { this.urlPhoto = urlPhoto; }
 
     public String getDescription() {
         return description;
