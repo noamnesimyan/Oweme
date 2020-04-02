@@ -60,6 +60,7 @@ public class EventMenuAdapter extends RecyclerView.Adapter {
                 public boolean onLongClick(View v) {
                     Intent intent = new Intent(context, PopUp.class);
                     intent.putExtra("expenseID", expense.getExpenseID());
+                    intent.putExtra("eventID",expense.getEventID());
                     context.startActivity(intent);
                     return false;
                 }

@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
+    android:background="@drawable/pop_ng"
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
         android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/nickName"
-        android:layout_marginTop="35dp"
-        android:textColor="#000000"
-        android:textSize="30dp"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:text="text will be here" />
+        <TextView
+            android:id="@+id/nickName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:text="text will be here"
+            android:layout_marginStart="10dp"
+            android:textColor="#000000"
+            android:textSize="25dp" />
 
-    <ImageView
+        <ImageView
         android:id="@+id/picture"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:scaleType="fitXY"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="10dp"
+
         tools:srcCompat="@tools:sample/backgrounds/scenic[15]" />
     </LinearLayout>
 

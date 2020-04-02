@@ -24,14 +24,14 @@ public class PopUp extends Activity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);  // use a linear layout manager
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new PopUpAdapter(getIntent().getStringExtra("expenseID")); // specify an adapter
+        mAdapter = new PopUpAdapter(getIntent().getStringExtra("expenseID"), getIntent().getStringExtra("eventID")); // specify an adapter
         recyclerView.setAdapter(mAdapter);
 
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int width = dm.widthPixels;
         int height = dm.heightPixels;
-        getWindow().setLayout((int)(width* .6), (int)(height*.6));
+        getWindow().setLayout((int)(width* .7), (int)(height*.6));
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.gravity = Gravity.CENTER;
         params.x = 0;
