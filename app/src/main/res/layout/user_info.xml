@@ -13,22 +13,21 @@
 
         <TextView
             android:id="@+id/nickName"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="35dp"
             android:text="text will be here"
-            android:layout_marginStart="10dp"
             android:textColor="#000000"
             android:textSize="25dp" />
 
         <ImageView
-        android:id="@+id/picture"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:scaleType="fitXY"
-        android:layout_marginStart="10dp"
-
-        tools:srcCompat="@tools:sample/backgrounds/scenic[15]" />
+            android:id="@+id/picture"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="10dp"
+            android:scaleType="fitXY"
+            tools:srcCompat="@tools:sample/backgrounds/scenic[15]" />
     </LinearLayout>
 
 </RelativeLayout>

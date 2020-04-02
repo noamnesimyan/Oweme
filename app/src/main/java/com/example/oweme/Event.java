@@ -34,7 +34,7 @@ public class Event {
 
     public void setExpenses(ArrayList<Expense> expenses) { this.expenses = expenses; }
 
-    public String getEid() {
+    public String getEVentID() {
         return eventID;
     }
 

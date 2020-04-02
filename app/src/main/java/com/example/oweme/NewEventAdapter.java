@@ -135,7 +135,7 @@ public class NewEventAdapter extends RecyclerView.Adapter<NewEventAdapter.MyView
 
         Intent i = new Intent(this.mContext, EventMenu.class);
         i.putExtra("EventName", event.getEventName());
-        i.putExtra("EventID", event.getEid());
+        i.putExtra("EventID", event.getEVentID());
         this.uIDs.add(currentUserID);
         i.putStringArrayListExtra("SelectedUsers", this.uIDs);
         this.mContext.startActivity(i);

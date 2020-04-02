@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class EventMenu extends AppCompatActivity {
 
@@ -46,8 +47,18 @@ public class EventMenu extends AppCompatActivity {
 
     private void setNameAndDate() {
         eventName.setText(getIntent().getStringExtra("EventName")); //modifier the event name
-        String date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());  //modifier the event date
-        eventDate.setText("Creation Date: " + date);
+        if(getIntent().getStringExtra("eventDate") == null) {
+            String date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());  //modifier the event date
+            eventDate.setText("Creation Date: " + date);
+        }
+        else {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date dateTime = new Date(Long.parseLong(getIntent().getStringExtra("eventDate")));
+            eventDate.setText("Creation Date: " + dateFormat.format(dateTime));
+
+        }
+
     }
 
     public void onClick(View view) {

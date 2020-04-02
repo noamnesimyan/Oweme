@@ -1,6 +1,7 @@
 package com.example.oweme;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,19 +32,33 @@ public class EventsHistoryAdapter extends RecyclerView.Adapter {
         private TextView eventName;
         private TextView date;
         private EventsHistoryAdapter myAdapter;
+        Context context;
 
-        public MyViewHolder(final View item, EventsHistoryAdapter myAdapter) {
+        public MyViewHolder(final View item, EventsHistoryAdapter myAdapter, Context context) {
 
             super(item);
             eventName = item.findViewById(R.id.eventName);
             date = item.findViewById(R.id.date);
             this.myAdapter = myAdapter;
+            this.context = context;
 
         }
 
         public void bindData(final Event event) {
             this.eventName.setText(event.getEventName());
             this.date.setText(convertDate(event.getCreatedDate()));
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Intent intent = new Intent(context, EventMenu.class);
+                    intent.putExtra("EventID", event.getEVentID());
+                    intent.putExtra("EventName", event.getEventName());
+                    intent.putExtra("EventDate", event.getCreatedDate());
+                    context.startActivity(intent);
+                    return false;
+                }
+            });
         }
 
         private String convertDate(long seconds) {
@@ -100,7 +115,7 @@ public class EventsHistoryAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View newView = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.event_info, parent, false);
-        EventsHistoryAdapter.MyViewHolder vh = new EventsHistoryAdapter.MyViewHolder(newView, this);
+        EventsHistoryAdapter.MyViewHolder vh = new EventsHistoryAdapter.MyViewHolder(newView, this, context);
         return vh;
     }
 
