@@ -42,8 +42,8 @@ public class EventMenuAdapter extends RecyclerView.Adapter {
         public MyViewHolder(final View item, EventMenuAdapter myAdapter, Context context) {
 
             super(item);
-            expenseDetails = item.findViewById(R.id.expenseDetails);
-            members = item.findViewById(R.id.members);
+            this.expenseDetails = item.findViewById(R.id.expenseDetails);
+            this.members = item.findViewById(R.id.members);
             this.picture = item.findViewById(R.id.picture);
             this.myAdapter = myAdapter;
             this.context = context;

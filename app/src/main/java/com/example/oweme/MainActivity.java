@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.myAccountBTN:
+                i = new Intent(this, AccountStatus.class);
+                startActivity(i);
                 break;
         }
     }
