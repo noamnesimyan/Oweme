@@ -1,12 +1,14 @@
 package com.example.oweme;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
@@ -15,36 +17,34 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
+import java.util.ArrayList;
 import java.util.List;
 
-public class AccountStatusAdapter extends RecyclerView.Adapter<AccountStatusAdapter.MyViewHolder> {
+public class EventsHistoryPopUpAdapter extends RecyclerView.Adapter {
 
-    private List<Debt> debts;
+    private ArrayList<Expense> expenses;
     private MyDataBase myLocalDB;
-    private Context context;
+    private List<Debt> debts;
+    Context context;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
+
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         private TextView debtDetails;
         private ImageView picture;
-        MyDataBase myLocalDB;
-        Context context;
         private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
-        public MyViewHolder(@NonNull View itemView, Context context) {
+        public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             this.debtDetails = itemView.findViewById(R.id.debtDetails);
             this.picture = itemView.findViewById(R.id.picture);
-            this.context = context;
-            myLocalDB = MyDataBase.getInstance(context);
         }
 
         public void bindData(final Debt debt) {
+
             if(debt.getUserID().equals(mAuth.getCurrentUser().getUid())) {
-                String details = ("You wasted " + debt.getAmount() + " NIS!");
-                this.debtDetails.setText(details);
+                this.debtDetails.setText("So far, you wasted " + String.format("%.2f", -1*debt.getAmount()) + " NIS!");
             }
             else {
                 if(debt.getAmount() > 0) {
@@ -56,32 +56,19 @@ public class AccountStatusAdapter extends RecyclerView.Adapter<AccountStatusAdap
             }
 
             Glide.with(this.picture.getContext()).load(debt.getUrlPhoto()).into(picture);
-
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    Toast.makeText(context, ((debt.getAmount() > 0 ) ?("Be sure s/he paid you your money!"):("Be sure you paid him/her their money!")), Toast.LENGTH_LONG).show();
-                    Debt newDebt = new Debt(debt.getUserID(), 0, true);
-                    myLocalDB.updateDebt(newDebt);
-                    myLocalDB.deleteDebt();
-                    return false;
-                }
-            });
         }
-
-
-
     }
 
-    public AccountStatusAdapter(Context context) {
+    public EventsHistoryPopUpAdapter(String eventID, Context context) {
+        this.expenses = new ArrayList<Expense>();
         this.context = context;
         myLocalDB = MyDataBase.getInstance(context);
-        this.debts = myLocalDB.getAllDebts(true);
-        getDebtsDetails();
+        getEventExpenses(eventID);
+
     }
 
     private void getDebtsDetails() {
-        for (int i = 0; i < getItemCount(); i++) {
+        for (int i = 0; i < debts.size(); i++) {
             final int finalI = i;
             database.getReference().child("Users").child(this.debts.get(i).getUserID()).addValueEventListener(new ValueEventListener() {
                 @Override
@@ -97,19 +84,47 @@ public class AccountStatusAdapter extends RecyclerView.Adapter<AccountStatusAdap
                 }
             });
         }
-
     }
 
+    private void createDebtsFromExpenses(ArrayList<Expense> expenses) {
+        MyDataBase myLocalDB = MyDataBase.getInstance(context);
+        myLocalDB.deleteAllDebts(false);
+        for(int i = 0; i < expenses.size(); i++) {
+            Util.addDebt(myLocalDB, expenses.get(i), false);
+        }
+        this.debts = myLocalDB.getAllDebts(false);
+    }
+
+    private void getEventExpenses(String eventID) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        database.getReference().child("Events").child(eventID).child("Expenses").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    expenses.add(userSnapshot.getValue(Expense.class));
+                }
+                createDebtsFromExpenses(expenses);
+                getDebtsDetails();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View newView = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.debt, parent, false);
-        AccountStatusAdapter.MyViewHolder vh = new AccountStatusAdapter.MyViewHolder(newView, context);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View newView = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.debt_popup, parent, false);
+        EventsHistoryPopUpAdapter.MyViewHolder vh = new EventsHistoryPopUpAdapter.MyViewHolder(newView);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        ((AccountStatusAdapter.MyViewHolder)holder).bindData(debts.get(position));
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        ((EventsHistoryPopUpAdapter.MyViewHolder)holder).bindData(debts.get(position));
     }
 
     @Override

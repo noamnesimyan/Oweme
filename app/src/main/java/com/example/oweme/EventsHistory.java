@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,8 +26,18 @@ public class EventsHistory extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);  // use a linear layout manager
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new EventsHistoryAdapter(this); // specify an adapter
+        mAdapter = new EventsHistoryAdapter(this, (getIntent().getBooleanExtra("need double click?", false) == true ? getIntent() : null)); // specify an adapter
         recyclerView.setAdapter(mAdapter);
+    }
+
+    public void onClick(View view) {
+        int id = view.getId();
+        switch (id) {
+            case R.id.back:
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+        }
+
     }
 }
 

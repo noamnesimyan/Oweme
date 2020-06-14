@@ -179,17 +179,18 @@ public class ExpenseDetails extends AppCompatActivity {
 
                     if(!members[i].equals(mAuth.getCurrentUser().getUid())) {
 
-                        Depth depth = myLocalDB.getDepthByUid(members[i]);
-                        if(depth == null) {
-                            Depth newDepth = new Depth(members[i], bill);
-                            myLocalDB.updateDepth(newDepth);
+                        Debt debt = myLocalDB.getDebtByUid(members[i], true);
+                        if(debt == null) {
+                            Debt newDebt = new Debt(members[i], bill, true);
+                            myLocalDB.updateDebt(newDebt);
                         }
                         else {
-                            depth.setAmount(depth.getAmount() + bill);
-                            myLocalDB.updateDepth(depth);
+                            debt.setAmount(debt.getAmount() + bill);
+                            myLocalDB.updateDebt(debt);
                         }
                     }
                 }
+
                 hideProgress();
 
                 Intent intent = new Intent();

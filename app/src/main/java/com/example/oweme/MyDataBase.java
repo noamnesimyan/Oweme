@@ -8,22 +8,22 @@ import androidx.room.RoomDatabase;
 
 import java.util.List;
 
-@Database(version = 1, entities = {Depth.class, Expense.class}, exportSchema = false)
-public abstract class MyDataBase extends RoomDatabase implements ExpenseDao, DepthDao {
+@Database(version = 1, entities = {Debt.class, Expense.class}, exportSchema = false)
+public abstract class MyDataBase extends RoomDatabase implements ExpenseDao, DebtDao {
 
-    abstract protected DepthDao getDepthDao();
+    abstract protected DebtDao getDebtDao();
     abstract protected ExpenseDao getExpenseDao();
 
     private static final String DB_NAME = "MyDataBase.db";
     private static volatile MyDataBase instance;
-    private static DepthDao depthDao;
+    private static DebtDao debtDao;
     private static ExpenseDao expenseDao;
 
 
     static synchronized MyDataBase getInstance(Context context) {
         if (instance == null) {
             instance = create(context);
-            depthDao= instance.getDepthDao();
+            debtDao = instance.getDebtDao();
             expenseDao = instance.getExpenseDao();
         }
         return instance;
@@ -41,8 +41,8 @@ public abstract class MyDataBase extends RoomDatabase implements ExpenseDao, Dep
     }
 
     @Override
-    public void updateDepth(Depth newDepth) {
-        depthDao.updateDepth(newDepth);
+    public void updateDebt(Debt newDebt) {
+        debtDao.updateDebt(newDebt);
     }
 
 
@@ -57,17 +57,22 @@ public abstract class MyDataBase extends RoomDatabase implements ExpenseDao, Dep
 
 
     @Override
-    public void deleteDepth() {
-        getDepthDao().deleteDepth();
+    public void deleteDebt() {
+        getDebtDao().deleteDebt();
     }
 
     @Override
-    public List<Depth> getAllDepths() {
-        return getDepthDao().getAllDepths();
+    public List<Debt> getAllDebts(boolean permanent) {
+        return getDebtDao().getAllDebts(permanent);
     }
 
     @Override
-    public Depth getDepthByUid(String uid) {
-        return depthDao.getDepthByUid(uid);
+    public Debt getDebtByUid(String uid, boolean permanent) {
+        return debtDao.getDebtByUid(uid, permanent);
+    }
+
+    @Override
+    public void deleteAllDebts(boolean permanent) {
+        getDebtDao().deleteAllDebts(permanent);
     }
 }

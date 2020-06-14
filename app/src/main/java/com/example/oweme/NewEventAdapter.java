@@ -90,7 +90,6 @@ public class NewEventAdapter extends RecyclerView.Adapter<NewEventAdapter.MyView
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         database.getReference().child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
-
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {

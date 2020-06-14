@@ -3,9 +3,9 @@
     <string name="username">UserName</string>
     <string name="password">Password</string>
     <string name="signIN">Sign in</string>
-    <string name="newMember">New to appName? Create a new account..</string>
+    <string name="newMember">New to OweMe? Create a new account..</string>
     <string name="createAccount">Create</string>
-    <string name="openingText">Welcome to appName! \nlets make your new account</string>
+    <string name="openingText">Welcome to OweMe! \nlets make your new account</string>
     <string name="details">Enter your details:</string>
     <string name="confirm">Confirm password</string>
     <string name="photo">upload a photo:</string>

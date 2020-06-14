@@ -46,6 +46,7 @@
             android:layout_marginHorizontal="75dp"
             android:text="@string/account"
             android:onClick="onClick"/>
+
     </LinearLayout>
 
 </RelativeLayout>

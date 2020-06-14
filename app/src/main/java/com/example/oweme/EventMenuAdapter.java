@@ -1,5 +1,6 @@
 package com.example.oweme;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -26,6 +27,8 @@ public class EventMenuAdapter extends RecyclerView.Adapter {
     private ArrayList<Expense> expenses;
     private Context context;
     private String eventID;
+    private boolean active;
+    final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -33,34 +36,40 @@ public class EventMenuAdapter extends RecyclerView.Adapter {
         private TextView expenseDetails;
         private TextView members;
         private ImageView picture;
-        private EventMenuAdapter myAdapter;
-        private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        private FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
         Context context;
 
 
-        public MyViewHolder(final View item, EventMenuAdapter myAdapter, Context context) {
+        public MyViewHolder(final View item, Context context) {
 
             super(item);
             this.expenseDetails = item.findViewById(R.id.expenseDetails);
             this.members = item.findViewById(R.id.members);
             this.picture = item.findViewById(R.id.picture);
-            this.myAdapter = myAdapter;
             this.context = context;
-
         }
 
         public void bindData(final Expense expense) {
-            this.expenseDetails.setText(mAuth.getCurrentUser().getDisplayName() + " paid " + expense.getAmount() + " NIS on " + expense.getDescription() + " for:");
+            database.getReference().child("Users").child(expense.getOwner()).child("nickName").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    expenseDetails.setText(dataSnapshot.getValue(String.class) + " paid " + expense.getAmount() + " NIS on " + expense.getDescription() + " for:");
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
             this.members.setText("...");
             Glide.with(this.picture.getContext()).load(expense.getUrlPhoto()).into(this.picture);
 
             this.members.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    Intent intent = new Intent(context, PopUp.class);
+                    Intent intent = new Intent(context, EventMenuPopUp.class);
                     intent.putExtra("expenseID", expense.getExpenseID());
-                    intent.putExtra("eventID",expense.getEventID());
+                    intent.putExtra("eventID", expense.getEventID());
                     context.startActivity(intent);
                     return false;
                 }
@@ -69,15 +78,37 @@ public class EventMenuAdapter extends RecyclerView.Adapter {
     }
 
 
+
     public EventMenuAdapter(Context context, String eventID) {
         this.expenses = new ArrayList<Expense>();
         this.context = context;
         this.eventID = eventID;
+        getEventStatus();
         getAllExpensesFromFB();
     }
 
+    private void getEventStatus() {
+        database.getReference().child("Events").child(eventID).child("status").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue(String.class).equals("active")) {
+                    active = true;
+                }
+                else {
+                    active = false;
+                }
+                ((Activity)context).findViewById(R.id.newExpense).setEnabled(active);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void getAllExpensesFromFB() {
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+
         database.getReference().child("Events").child(eventID).child("Expenses").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -100,7 +131,7 @@ public class EventMenuAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View newView = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.expense_info, parent, false);
-        EventMenuAdapter.MyViewHolder vh = new EventMenuAdapter.MyViewHolder(newView, this, context);
+        EventMenuAdapter.MyViewHolder vh = new EventMenuAdapter.MyViewHolder(newView, context);
         return vh;
     }
 

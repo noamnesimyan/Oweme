@@ -7,15 +7,16 @@
         android:required="true" />
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AccountStatus"></activity>
+        <activity android:name=".EventsHistoryPopUp"></activity>
+        <activity android:name=".AccountStatus" />
         <activity
-            android:name=".PopUp"
+            android:name=".EventMenuPopUp"
             android:theme="@style/AppTheme.PopMe" />
         <activity android:name=".EventsHistory" />
 

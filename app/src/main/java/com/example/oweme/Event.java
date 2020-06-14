@@ -61,7 +61,7 @@ public class Event {
         return this.members;
     }
 
-    public void addnewExpense(Expense expense) { this.expenses.add(expense);}
+    public void addNewExpense(Expense expense) { this.expenses.add(expense);}
 
     public void removeExpense(Expense expense) { this.expenses.remove(expense);}
 

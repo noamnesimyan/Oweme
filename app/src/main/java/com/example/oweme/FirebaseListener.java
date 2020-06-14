@@ -36,19 +36,17 @@ public class FirebaseListener extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private void refreshMyEvents()
-    {
+    private void refreshMyEvents() {
         database.getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("events").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String events = (String)dataSnapshot.getValue();
+                String events = (String) dataSnapshot.getValue();
                 String[] newEvents = events.split(","); //we assume that we only add events and it will be the last one in the array
                 if (myEvents == null) {
                     for (int i = 0; i < newEvents.length; i++)
                         listenToEventExpenses(newEvents[i]);
-                }
-                else  if (newEvents.length > myEvents.length)
-                    listenToEventExpenses(newEvents[newEvents.length-1]);
+                } else if (newEvents.length > myEvents.length)
+                    listenToEventExpenses(newEvents[newEvents.length - 1]);
 
                 myEvents = newEvents;
                 //send notification if new event was added
@@ -61,8 +59,6 @@ public class FirebaseListener extends Service {
         });
     }
 
-
-
     private void listenToEventExpenses(String eventID)
     {
         database.getReference().child("Events").child(eventID).child("Expenses").addChildEventListener(new ChildEventListener() {
@@ -73,20 +69,7 @@ public class FirebaseListener extends Service {
                 if (!myLocalDB.exist(newExpense)) {
                     myLocalDB.addNewExpense(newExpense);
 
-                    Depth newDepth = myLocalDB.getDepthByUid(newExpense.getOwner());
-
-                    String[] members = newExpense.getMembers().split(",");
-                    double bill = newExpense.getAmount() / members.length;
-
-                    if (newDepth == null) {
-                        newDepth = new Depth(newExpense.getOwner(), -bill);
-                        myLocalDB.updateDepth(newDepth);
-                    }
-                    else {
-                        newDepth.setAmount(newDepth.getAmount() - bill);
-                        myLocalDB.updateDepth(newDepth);
-                    }
-
+                    Util.addDebt(myLocalDB, newExpense, true);
                     //send notification
                 }
                 else {

@@ -1,6 +1,5 @@
 package com.example.oweme;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class PopUpAdapter extends RecyclerView.Adapter{
+public class EventMenuPopUpAdapter extends RecyclerView.Adapter{
 
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private ArrayList<User> users;
@@ -31,7 +30,7 @@ public class PopUpAdapter extends RecyclerView.Adapter{
         private TextView userNickName;
         private ImageView picture;
 
-        public MyViewHolder(@NonNull View itemView, PopUpAdapter myAdapter) {
+        public MyViewHolder(@NonNull View itemView, EventMenuPopUpAdapter myAdapter) {
             super(itemView);
             userNickName = itemView.findViewById(R.id.nickName);
             picture = itemView.findViewById(R.id.picture);
@@ -43,7 +42,7 @@ public class PopUpAdapter extends RecyclerView.Adapter{
         }
     }
 
-    public PopUpAdapter(String expenseID, String eventID) {
+    public EventMenuPopUpAdapter(String expenseID, String eventID) {
         this.users = new ArrayList<User>();
         this.expenseID = expenseID;
         this.eventID = eventID;
@@ -87,14 +86,14 @@ public class PopUpAdapter extends RecyclerView.Adapter{
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View newView = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.user_info, parent, false);
-        PopUpAdapter.MyViewHolder vh = new PopUpAdapter.MyViewHolder(newView, this);
+        View newView = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.user_info_popup, parent, false);
+        EventMenuPopUpAdapter.MyViewHolder vh = new EventMenuPopUpAdapter.MyViewHolder(newView, this);
         return vh;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ((PopUpAdapter.MyViewHolder)holder).bindData(users.get(position));
+        ((EventMenuPopUpAdapter.MyViewHolder)holder).bindData(users.get(position));
     }
 
     @Override

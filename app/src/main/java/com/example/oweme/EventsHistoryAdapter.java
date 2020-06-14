@@ -2,6 +2,7 @@ package com.example.oweme;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +11,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,6 +30,7 @@ public class EventsHistoryAdapter extends RecyclerView.Adapter {
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private Context context;
+    private Intent intent;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -33,20 +38,25 @@ public class EventsHistoryAdapter extends RecyclerView.Adapter {
         private TextView date;
         private EventsHistoryAdapter myAdapter;
         Context context;
+        private Intent intent;
+        private ArrayList<String> uIDs; // ArrayList of all the user IDs in the event
 
-        public MyViewHolder(final View item, EventsHistoryAdapter myAdapter, Context context) {
+
+        public MyViewHolder(final View item, EventsHistoryAdapter myAdapter, Context context, Intent intent) {
 
             super(item);
             eventName = item.findViewById(R.id.eventName);
             date = item.findViewById(R.id.date);
             this.myAdapter = myAdapter;
             this.context = context;
-
+            this.uIDs = new ArrayList<String>();
+            this.intent = intent;
         }
 
         public void bindData(final Event event) {
             this.eventName.setText(event.getEventName());
             this.date.setText(convertDate(event.getCreatedDate()));
+            this.uIDs = arrayToArrayList(event.getMembers().split(","));
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -55,10 +65,30 @@ public class EventsHistoryAdapter extends RecyclerView.Adapter {
                     intent.putExtra("EventID", event.getEVentID());
                     intent.putExtra("EventName", event.getEventName());
                     intent.putExtra("EventDate", event.getCreatedDate());
+                    intent.putStringArrayListExtra("SelectedUsers", uIDs);
                     context.startActivity(intent);
                     return false;
                 }
             });
+
+            if(this.intent != null) {
+                itemView.setOnClickListener(new DoubleClickListener() {
+                    @Override
+                    public void onDoubleClick() {
+                        String eventID = event.getEVentID();
+
+                        Intent intent = new Intent(context, EventsHistoryPopUp.class);
+                        intent.putExtra("eventID", eventID);
+                      /*  Bundle args = new Bundle();
+                        args.putSerializable("ARRAYLIST", (Serializable)expenses);
+                        intent.putExtra("BUNDLE", args);
+                        */
+                        context.startActivity(intent);
+                    }
+                });
+            }
+
+
         }
 
         private String convertDate(long seconds) {
@@ -68,13 +98,22 @@ public class EventsHistoryAdapter extends RecyclerView.Adapter {
             return dateFormat.format(dateTime);
 
         }
+
+        private ArrayList<String> arrayToArrayList(String[] array) {
+            ArrayList<String> arrayList = new ArrayList<String>();
+            for(String element : array) {
+                arrayList.add(element);
+            }
+            return arrayList;
+        }
     }
 
-    public EventsHistoryAdapter(Context context) {
+    public EventsHistoryAdapter(Context context, Intent intent) {
 
         this.events = new ArrayList<Event>();
         this.eventsIDs = new String();
         this.context = context;
+        this.intent = intent;
         getAllEventsFromFB();
     }
 
@@ -115,8 +154,9 @@ public class EventsHistoryAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View newView = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.event_info, parent, false);
-        EventsHistoryAdapter.MyViewHolder vh = new EventsHistoryAdapter.MyViewHolder(newView, this, context);
+        EventsHistoryAdapter.MyViewHolder vh = new EventsHistoryAdapter.MyViewHolder(newView, this, context, intent);
         return vh;
+
     }
 
     @Override

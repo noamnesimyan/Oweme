@@ -1,15 +1,22 @@
 package com.example.oweme;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,6 +33,9 @@ public class EventMenu extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    final FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+
 
     static final int PICK_CONTACT_REQUEST = 1;
 
@@ -42,19 +52,22 @@ public class EventMenu extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
         eventName = findViewById(R.id.eventName);
         eventDate = findViewById(R.id.date);
+
+
         setNameAndDate();
     }
 
     private void setNameAndDate() {
         eventName.setText(getIntent().getStringExtra("EventName")); //modifier the event name
-        if(getIntent().getStringExtra("eventDate") == null) {
+
+        if(getIntent().getStringExtra("EventDate") == null) {
             String date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());  //modifier the event date
             eventDate.setText("Creation Date: " + date);
         }
         else {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy");
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-            Date dateTime = new Date(Long.parseLong(getIntent().getStringExtra("eventDate")));
+            Date dateTime = new Date(Long.parseLong(getIntent().getStringExtra("EventDate")));
             eventDate.setText("Creation Date: " + dateFormat.format(dateTime));
 
         }
@@ -66,9 +79,23 @@ public class EventMenu extends AppCompatActivity {
         switch (id) {
             case R.id.newExpense:
                 moveToExpenseDetails();
+                break;
+            case R.id.back:
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.lockEvent:
+                openDialog();
+                break;
+
         }
     }
-    
+
+    private void openDialog() {
+        Dialog dialog = new Dialog(this.eventID, this);
+        dialog.show(getSupportFragmentManager(), "Dialog");
+    }
+
     private void moveToExpenseDetails() {
         Intent i = new Intent(this, ExpenseDetails.class);
         selectedUsersIDS = getIntent().getStringArrayListExtra("SelectedUsers");

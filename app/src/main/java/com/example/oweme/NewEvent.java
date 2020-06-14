@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -59,6 +60,9 @@ public class NewEvent extends AppCompatActivity {
             case R.id.addBTN:
                 (findViewById(R.id.my_recycler_view)).setVisibility(View.VISIBLE);
                 break;
+            case R.id.cancel:
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
         }
     }
 
