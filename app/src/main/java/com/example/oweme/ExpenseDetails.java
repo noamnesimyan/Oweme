@@ -166,11 +166,11 @@ public class ExpenseDetails extends AppCompatActivity {
         newExpense.setCreatedDate(System.currentTimeMillis());
         newExpense.setExpenseID(expenseID);
         newExpense.setEventID(this.eventID);
+        myLocalDB.addNewExpense(newExpense); // add expense to local DB
         database.getReference().child("Events").child(this.eventID).child("Expenses").child(expenseID).setValue(newExpense).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                myLocalDB.addNewExpense(newExpense); // add expense to local DB
-
+                
                 String[] members = newExpense.getMembers().split(",");
                 double bill = newExpense.getAmount() / members.length;
 

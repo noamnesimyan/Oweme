@@ -52,15 +52,16 @@ public class EventMenu extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
         eventName = findViewById(R.id.eventName);
         eventDate = findViewById(R.id.date);
+        Intent intent = getIntent();
 
-
-        setNameAndDate();
+        setNameAndDate(intent);
     }
 
-    private void setNameAndDate() {
-        eventName.setText(getIntent().getStringExtra("EventName")); //modifier the event name
+    private void setNameAndDate(Intent intent) {
 
-        if(getIntent().getStringExtra("EventDate") == null) {
+        eventName.setText(intent.getStringExtra("EventName")); //modifier the event name
+
+        if(intent.getStringExtra("EventDate") == null) {
             String date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());  //modifier the event date
             eventDate.setText("Creation Date: " + date);
         }

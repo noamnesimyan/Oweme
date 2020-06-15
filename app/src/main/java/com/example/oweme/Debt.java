@@ -4,10 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity (tableName = "MyDebts")
+
+@Entity (tableName = "MyDebts" ,primaryKeys = {"userID","permanent"})
 public class Debt {
 
-    @PrimaryKey
     @NonNull
     private String userID;
 

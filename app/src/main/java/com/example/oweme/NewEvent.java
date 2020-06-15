@@ -100,7 +100,7 @@ public class NewEvent extends AppCompatActivity {
             }
         });
 
-        Toast.makeText(this,"LAY!",Toast.LENGTH_LONG).show();
+        Toast.makeText(this,"Event Created",Toast.LENGTH_LONG).show();
     }
 
 

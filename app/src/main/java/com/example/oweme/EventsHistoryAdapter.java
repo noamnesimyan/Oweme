@@ -36,18 +36,16 @@ public class EventsHistoryAdapter extends RecyclerView.Adapter {
 
         private TextView eventName;
         private TextView date;
-        private EventsHistoryAdapter myAdapter;
         Context context;
         private Intent intent;
         private ArrayList<String> uIDs; // ArrayList of all the user IDs in the event
 
 
-        public MyViewHolder(final View item, EventsHistoryAdapter myAdapter, Context context, Intent intent) {
+        public MyViewHolder(final View item, Context context, Intent intent) {
 
             super(item);
             eventName = item.findViewById(R.id.eventName);
             date = item.findViewById(R.id.date);
-            this.myAdapter = myAdapter;
             this.context = context;
             this.uIDs = new ArrayList<String>();
             this.intent = intent;
@@ -76,13 +74,8 @@ public class EventsHistoryAdapter extends RecyclerView.Adapter {
                     @Override
                     public void onDoubleClick() {
                         String eventID = event.getEVentID();
-
                         Intent intent = new Intent(context, EventsHistoryPopUp.class);
                         intent.putExtra("eventID", eventID);
-                      /*  Bundle args = new Bundle();
-                        args.putSerializable("ARRAYLIST", (Serializable)expenses);
-                        intent.putExtra("BUNDLE", args);
-                        */
                         context.startActivity(intent);
                     }
                 });
@@ -154,7 +147,7 @@ public class EventsHistoryAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View newView = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.event_info, parent, false);
-        EventsHistoryAdapter.MyViewHolder vh = new EventsHistoryAdapter.MyViewHolder(newView, this, context, intent);
+        EventsHistoryAdapter.MyViewHolder vh = new EventsHistoryAdapter.MyViewHolder(newView, context, intent);
         return vh;
 
     }
