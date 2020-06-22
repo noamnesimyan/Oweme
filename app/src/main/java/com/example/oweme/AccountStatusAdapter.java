@@ -61,8 +61,7 @@ public class AccountStatusAdapter extends RecyclerView.Adapter<AccountStatusAdap
                 @Override
                 public boolean onLongClick(View v) {
                     Toast.makeText(context, ((debt.getAmount() > 0 ) ?("Be sure s/he paid you your money!"):("Be sure you paid him/her their money!")), Toast.LENGTH_LONG).show();
-                    Debt newDebt = new Debt(debt.getUserID(), 0, true);
-                    myLocalDB.updateDebt(newDebt);
+                    myLocalDB.getDebtByUid(debt.getUserID(), true).setAmount(0);
                     myLocalDB.deleteDebt();
                     return false;
                 }
